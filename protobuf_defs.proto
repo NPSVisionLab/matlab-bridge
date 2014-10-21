@@ -1,0 +1,206 @@
+message MatlabBridgeMsg {
+    optional RunSet run = 1;
+    repeated Properties props = 2;
+    optional ResultSet res = 3;
+    optional Model model = 4;
+}
+
+message Model {
+    optional FilePath mPath = 1;
+}
+
+message Properties {
+    optional string key = 1 [default = ""];
+    optional string value = 2 [default = ""];
+}
+
+//struct Result {
+//    Labelable original;
+//    LabelableList foundLabels;
+//  };
+message Result {
+    optional Labelable original = 1;
+    optional LabelableList foundLabels = 2;
+}
+
+//sequence<Result> ResultList;
+message ResultList {
+    repeated Result rslt = 1;
+}
+
+//struct ResultSet {
+//    ResultList results;
+//  };
+message ResultSet {
+    optional ResultList results = 1;
+}
+
+//struct DirectoryPath {
+//    string relativePath;  // without the filename
+//  };
+message DirectoryPath {
+    optional string relativePath = 1 [default = ""];
+}
+
+//struct FilePath {
+//    DirectoryPath directory;
+//    string filename;      // just the filename, such as image.jpg
+//  };
+message FilePath {
+    optional DirectoryPath directory = 1;
+    optional string filename = 2 [default = ""];
+}
+
+//struct Substrate {
+//    bool isImage = true;
+//    bool isVideo = false;
+//
+//    FilePath path;
+//    int width = 0;
+//    int height = 0;
+//  };
+message Substrate {
+    optional bool isImage = 1 [default = true];
+    optional bool isVideo = 2 [default = false];
+    optional FilePath path = 3;
+    optional int32 width = 4 [default = 0];
+    optional int32 height = 5 [default = 0];
+}
+
+//struct Semantics {
+//    string url;
+//  };
+message Semantics {
+    optional string url = 1 [default = ""];
+}
+
+//dictionary<string, string> LabelProperties;
+message LabelProperties {
+    optional string key = 1 [default = ""];
+    optional string value = 2 [default = ""];
+}
+
+//struct Label {
+//    bool hasLabel = CVACFALSE;
+//    string name;
+//    LabelProperties properties;
+//    Semantics semantix;
+//  };
+message Label {
+    optional bool hasLabel = 1 [default = false];
+    optional string name = 2 [default = ""];
+    optional LabelProperties properties = 3;
+    optional Semantics semantix = 4;
+}
+
+//class Labelable {
+//    float confidence;  // = 0.0  should be default value but Ice 3.4.2 has a C++ bug
+//    Label lab;
+//    Substrate sub;
+//  };
+message Labelable {
+    optional float confidence = 1 [default = 0.0];
+    optional Label lab = 2;
+    optional Substrate sub = 3;
+}
+
+//class LabeledTrack extends Labelable {
+//    FrameLocationList keyframesLocations;
+//    Interpolation interp = DISCRETE;
+//  };
+//enum Interpolation { DISCRETE, LINEAR, POLYNOMIAL };
+message LabeledTrack {
+    enum Interpolation {
+        DISCRETE = 0;
+        LINEAR = 1;
+        POLYNOMIAL = 2;
+    }
+    optional float confidence = 1 [default = 0.0];
+    optional Label lab = 2;
+    optional Substrate sub = 3;
+    optional FrameLocationList keyframesLocations = 4;
+    optional Interpolation interp = 5 [default = DISCRETE];
+}
+
+//sequence<FrameLocation> FrameLocationList;
+message FrameLocationList {
+    repeated FrameLocation framelocation = 1;
+}
+
+//struct FrameLocation {
+//    VideoSeekTime frame;
+//    Location loc;
+//    bool occluded = false;
+//    bool outOfFrame = false;
+//  };
+message FrameLocation {
+    optional VideoSeekTime frame = 1;
+    optional Point2D loc = 2;
+    optional bool occluded = 3 [default = false];
+    optional bool outOfFrame = 4 [default = false];
+}
+
+//struct VideoSeekTime {
+//    long time;
+//    long framecnt;
+//  };
+message VideoSeekTime {
+    optional int64 time = 1;
+    optional int64 framecnt = 2;
+}
+
+//class Location {
+//  };
+//  class Point2D extends Location {
+//    int x;
+//    int y;
+//  };
+message Point2D {
+    optional int32 x = 1;
+    optional int32 y = 2;
+}
+
+//["clr:generic:List"] sequence<Labelable> LabelableList;
+message LabelableList {
+    repeated Labelable labelable = 1;
+}
+
+//struct Purpose {
+//    PurposeType ptype = UNPURPOSED;
+//    int classID = 0; // if MULTICLASS
+//  };
+message Purpose {
+    enum PurposeType {
+        UNPURPOSED = 0;
+        POSITIVE = 1;
+        NEGATIVE = 2;
+        MULTICLASS = 3;
+        ANY = 4;
+    }
+
+    optional PurposeType ptype = 1 [default = UNPURPOSED];
+    optional int32 classID = 2 [default = 0];
+}
+
+//class PurposedList {
+//    Purpose pur;
+//  };
+//class PurposedLabelableSeq extends PurposedList {
+//    LabelableList labeledArtifacts;
+//  };
+message PurposedLabelableSeq {
+    optional Purpose pur = 1;
+    optional LabelableList labeledArtifacts = 2;
+}
+
+//["clr:generic:List"] sequence<PurposedList> PurposedListSequence;
+message PurposedListSequence {
+    repeated PurposedLabelableSeq purlist = 1;
+}
+
+//struct RunSet {
+//    PurposedListSequence purposedLists;
+//  };
+message RunSet {
+    optional PurposedListSequence purposedLists = 1;
+}

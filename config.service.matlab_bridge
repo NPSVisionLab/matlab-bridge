@@ -1,0 +1,17 @@
+SampleDetector.Endpoints=tcp -p 20131
+SampleDetectorx.MatlabExecutable=/Applications/MATLAB_R2013b.app/bin/matlab
+SampleDetectorx.MatlabServiceEntryFunction=CVAC/algorithms/matlab-bridge/training_sample.m
+SampleDetectorx.MatlabServiceMsgPath=/tmp/service1msg
+SampleDetectorx.MatlabServiceType=Detector
+
+SampleTrainer.Endpoints=tcp -p 20132
+SampleTrainerx.MatlabExecutable=C:/Program Files/MATLAB_R2013b/bin/matlab.exe
+SampleTrainerx.MatlabServiceEntryFunction=CVAC/algorithms/matlab-bridge/detection_sample.m
+SampleTrainerx.MatlabServiceMsgPath=/tmp/service2msg
+SampleTrainerx.MatlabServiceType=DetectorTrainer
+
+KalmanTracker.Endpoints=tcp -p 20133
+KalmanTrackerx.MatlabExecutable=/Applications/MATLAB_R2013b.app/bin/matlab
+KalmanTrackerx.MatlabServiceEntryFunction=CVAC/algorithms/matlab-bridge/kalman_tracker.m
+KalmanTrackerx.MatlabServiceMsgPath=/tmp/service3msg
+KalmanTrackerx.MatlabServiceType=Detector
