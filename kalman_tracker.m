@@ -107,31 +107,31 @@ function [] = trackerService( msg_path, matlab_bridge_dir, easy_data_dir )
     resultset = tempSetAll( in_protobuf_msg, resultset );
 
     %   number of classes in runset
-    nclass  = length( in_protobuf_msg.run.purposedLists.purlist );
+    % nclass  = length( in_protobuf_msg.run.purposedLists.purlist );
     % display( [ 'debug: Number of classes in the runset: ' num2str(nclass) ] )
 
     % iterate over artifacts in runset
     count = 1;
-    for c=1:nclass
-        % purpose = in_protobuf_msg.run.purposedLists.purlist(c).pur.ptype;
+    for plidx = 1:length(in_protobuf_msg.run.purposedLists.purlist)
+        % purpose = plist.pur.ptype;
         % display( [ 'debug: Artifacts of type: ' num2str(purpose) ':' ] )
-        arts = in_protobuf_msg.run.purposedLists.purlist(c).labeledArtifacts;
-        num_artifacts = length(arts.labelable);
-        for a=1:num_artifacts
+        arts = in_protobuf_msg.run.purposedLists.purlist(plidx).labeledArtifacts;
+        for artidx = 1:length(arts.labelable)
+            labelable = arts.labelable(artidx);
             % relative_path is relative to Easy data directory
             filepath = fullfile( easy_data_dir, ...
-                                 arts.labelable(a).sub.path.directory.relativePath, ...
-                                 arts.labelable(a).sub.path.filename );
-            % display( ['debug: Will process artifact ' filepath] );
-            % positions = detectAndTrack( filepath );
+                                 labelable.sub.path.directory.relativePath, ...
+                                 labelable.sub.path.filename );
+            %display( ['debug: Will process artifact ' filepath] );
+            %positions = detectAndTrack( filepath );
             display( ['warn: FAKING processing of artifact ' filepath] );
             positions = [25 49; 35 59; 32 63];
             
             % insert the positions into the ResultSet as a track
-            %todo: [resultset result] = addResult( resultset, arts.labelable(a) );
-            %pbTrack = createPbTrack( positions );
-            %todo: addFoundLabelable( result, pbTrack );
-            resultset = setPositions( in_protobuf_msg, resultset, count, c, a, positions );
+            % [resultset result] = addResult( resultset, labelable );
+            % pbTrack = createPbTrack( positions );
+            % addFoundLabelable( result, pbTrack );
+            resultset = setPositions( in_protobuf_msg, resultset, count, plidx, artidx, positions );
             count = count + 1;
         end
     end
