@@ -3,11 +3,10 @@
 % modified to work as EasyCV service via the MatlabBridge.
 % Matz Oct 2014
 
-% turn off warning for one-based coordinate system
-warning('off','vision:transition:usesOldCoordinates')
-
 % main Matlab function which gets invoked from MatlabBridge.py
 function [] = kalman_tracker()
+    % turn off warning for one-based coordinate system
+    warning('off','vision:transition:usesOldCoordinates')
     
     display( 'debug: entered Matlab code.' )
     % fetch variables from the base workspace;
@@ -73,6 +72,15 @@ function [trackedLocations] = detectAndTrack( inputVideoFile )
 
 end % function
 
+% the actual tracking function; makes lots of assumptions on the scene
+% and motion (image version)
+function [trackedLocations] = detectAndTrackImage( inputImageFile )
+    
+    display( ['debug: I dont know how this is going to work yet... ' inputImageFile] )
+    trackedLocations = [];
+
+end % function
+
     
 % protobuf conversion, parsing of messages, 
 function [] = trackerService( msg_path, matlab_bridge_dir, easy_data_dir )
@@ -123,15 +131,15 @@ function [] = trackerService( msg_path, matlab_bridge_dir, easy_data_dir )
             labelable = arts.labelable(artidx);
             % relative_path is relative to Easy data directory
             filepath = fullfile( easy_data_dir, ...
-                                 arts.labelable(a).sub.path.directory.relativePath, ...
-                                 arts.labelable(a).sub.path.filename );
+                                 arts.labelable(artidx).sub.path.directory.relativePath, ...
+                                 arts.labelable(artidx).sub.path.filename );
             display( ['debug: Will process artifact ' filepath] );
             % call the appropriate function depending on whether or not
             % the artifact is an image or video
-            if ( arts.labelable(a).sub.isVideo == true )
+            if ( arts.labelable(artidx).sub.isVideo == true )
                 display( ['debug: artifact is a video '] );
                 positions = detectAndTrack( filepath );
-            elseif ( arts.labelable(a).sub.isImage == true )
+            elseif ( arts.labelable(artidx).sub.isImage == true )
                 display( ['debug: artifact is an image '] );
                 positions = detectAndTrackImage( filepath );
             else
@@ -144,7 +152,7 @@ function [] = trackerService( msg_path, matlab_bridge_dir, easy_data_dir )
             
             % change from Matlab one-based coordinate system to
             % EasyCV zero-based coordinates.
-            positions = positions.-1;
+            positions = minus(positions,1);
 
             % insert the positions into the ResultSet as a track
             % [resultset result] = addResult( resultset, labelable );
