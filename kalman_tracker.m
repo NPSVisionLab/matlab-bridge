@@ -3,6 +3,9 @@
 % modified to work as EasyCV service via the MatlabBridge.
 % Matz Oct 2014
 
+% turn off warning for one-based coordinate system
+warning('off','vision:transition:usesOldCoordinates')
+
 % main Matlab function which gets invoked from MatlabBridge.py
 function [] = kalman_tracker()
     
@@ -104,7 +107,7 @@ function [] = trackerService( msg_path, matlab_bridge_dir, easy_data_dir )
     resultset.results = pblib_set(resultset.results, 'rslt', pb_read_Result());
 
     % fill the ResultSet with the originals
-    resultset = tempSetAll( in_protobuf_msg, resultset );
+    % resultset = tempSetAll( in_protobuf_msg, resultset );
 
     %   number of classes in runset
     % nclass  = length( in_protobuf_msg.run.purposedLists.purlist );
@@ -120,13 +123,29 @@ function [] = trackerService( msg_path, matlab_bridge_dir, easy_data_dir )
             labelable = arts.labelable(artidx);
             % relative_path is relative to Easy data directory
             filepath = fullfile( easy_data_dir, ...
-                                 labelable.sub.path.directory.relativePath, ...
-                                 labelable.sub.path.filename );
-            %display( ['debug: Will process artifact ' filepath] );
-            %positions = detectAndTrack( filepath );
-            display( ['warn: FAKING processing of artifact ' filepath] );
-            positions = [25 49; 35 59; 32 63];
+                                 arts.labelable(a).sub.path.directory.relativePath, ...
+                                 arts.labelable(a).sub.path.filename );
+            display( ['debug: Will process artifact ' filepath] );
+            % call the appropriate function depending on whether or not
+            % the artifact is an image or video
+            if ( arts.labelable(a).sub.isVideo == true )
+                display( ['debug: artifact is a video '] );
+                positions = detectAndTrack( filepath );
+            elseif ( arts.labelable(a).sub.isImage == true )
+                display( ['debug: artifact is an image '] );
+                positions = detectAndTrackImage( filepath );
+            else
+                display( ['error: unknown artifact type '] );
+                positions = [];
+            end
             
+            %display( ['warn: FAKING processing of artifact ' filepath] );
+            %positions = [25 49; 35 59; 32 63];
+            
+            % change from Matlab one-based coordinate system to
+            % EasyCV zero-based coordinates.
+            positions = positions.-1;
+
             % insert the positions into the ResultSet as a track
             % [resultset result] = addResult( resultset, labelable );
             % pbTrack = createPbTrack( positions );
@@ -145,6 +164,14 @@ function [] = trackerService( msg_path, matlab_bridge_dir, easy_data_dir )
     fod = fopen( msg_path, 'w');
     fwrite(fod, out_buffer, 'uint8');
     fclose(fod);
+
+    % on Windows, write a semaphore file that is waited on in the
+    % Python code
+    if ispc
+        touch = fopen( [msg_path '.done'], 'w');
+        fclose(touch);
+    end
+
 end
 
     

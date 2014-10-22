@@ -85,14 +85,14 @@ for c=1:nclass
     end
 end
 
-%%% Service Definition (Properties) %%%
+%%% Service Properties %%%
 % These are set by the client to be used by your matlab training or detection 
 % service
 display( ' ' )
 display( '--- Service Properites (key,value) ---' )
-num_keys = length(in_protobuf_msg.serviceDef);
+num_keys = length(in_protobuf_msg.props);
 for k=1:num_keys
-    display( [ '(' in_protobuf_msg.serviceDef(k).key ',' in_protobuf_msg.serviceDef(k).value ')' ] )
+    display( [ '(' in_protobuf_msg.props(k).key ',' in_protobuf_msg.props(k).value ')' ] )
 end
 
 %%% Model Getting %%%
