@@ -123,7 +123,19 @@ function [] = trackerService( msg_path, matlab_bridge_dir, easy_data_dir )
                                  arts.labelable(a).sub.path.directory.relativePath, ...
                                  arts.labelable(a).sub.path.filename );
             display( ['debug: Will process artifact ' filepath] );
-            positions = detectAndTrack( filepath );
+            % call the appropriate function depending on whether or not
+            % the artifact is an image or video
+            if ( arts.labelable(a).sub.isVideo == true )
+                display( ['debug: artifact is a video '] );
+                positions = detectAndTrack( filepath );
+            elseif ( arts.labelable(a).sub.isImage == true )
+                display( ['debug: artifact is an image '] );
+                positions = detectAndTrackImage( filepath );
+            else
+                display( ['error: unknown artifact type '] );
+                positions = [];
+            end
+            
             %display( ['warn: FAKING processing of artifact ' filepath] );
             %positions = [25 49; 35 59; 32 63];
             
