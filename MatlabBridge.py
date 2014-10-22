@@ -130,7 +130,7 @@ def to_CVAC_ResultSet ( protobuf_matlab_bridge_msg ):
                 pt2d = cvac.Point2D(x=frm.loc.x,y=frm.loc.y)
                 frmLoc = cvac.FrameLocation( frame=vst, loc=pt2d, occluded=frm.occluded,outOfFrame=frm.outOfFrame )
                 track.append( frmLoc )
-            ftlabelable = cvac.LabeledTrack( confidence = protobuf_matlab_bridge_msg.res.results.rslt[ridx].foundLabels.labeledTrack[0].confidence, lab = ftlab, sub = ftsub, keyframesLocations=track, interp=cvac.Interpolation(protobuf_matlab_bridge_msg.res.results.rslt[0].foundLabels.labeledTrack[0].interp) )
+            ftlabelable = cvac.LabeledTrack( confidence = protobuf_matlab_bridge_msg.res.results.rslt[ridx].foundLabels.labeledTrack[0].confidence, lab = ftlab, sub = ftsub, keyframesLocations=track, interp=cvac.Interpolation.DISCRETE )
         
         if flabelable and ftlabelable:
             rslt_set.append( cvac.Result( olabelable, [ flabelable, ftlabelable ] ) )
@@ -235,6 +235,12 @@ class MatlabBridgeTrainerI(cvac.DetectorTrainer, threading.Thread):
                             print("----------------------------------------------------------------------") 
                             process_success = call( [ self.matlabExecutable, "-nodesktop",
                                                       "-nosplash", "-nodisplay", "-r", cmd ] )
+                            # on Windows, write a semaphore file that is waited on below;
+                            # this is because the Windows Matlab executable starts another process and
+                            # exits right away.
+                            while not os.path.isfile( self.matlabMsgPath+'.done' ):
+                                time.sleep(0.1) # 0.1 seconds
+                            os.remove( self.matlabMsgPath+'.done' )
                             print("----------------------------------------------------------------------")
                         else:
                             # TODO: other operating systems
@@ -349,7 +355,13 @@ class MatlabBridgeDetectorI(cvac.Detector, threading.Thread):
                         # TODO: windows commands
                         print("----------------------------------------------------------------------")
                         process_success = call( [ self.matlabExecutable, "-nodesktop",
-                                                 "-nosplash", "-nodisplay", "-r", cmd ] )
+                                                 "-nosplash", "-automation", "-r", cmd ] )
+                        # on Windows, write a semaphore file that is waited on below;
+                        # this is because the Windows Matlab executable starts another process and
+                        # exits right away.
+                        while not os.path.isfile( self.matlabMsgPath+'.done' ):
+                            time.sleep(0.1) # 0.1 seconds
+                        os.remove( self.matlabMsgPath+'.done' )
                         print("----------------------------------------------------------------------")
                     else:
                         # TODO: other operating systems
