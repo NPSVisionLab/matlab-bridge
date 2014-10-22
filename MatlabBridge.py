@@ -243,6 +243,12 @@ class MatlabBridgeTrainerI(cvac.DetectorTrainer, threading.Thread):
                             print("----------------------------------------------------------------------") 
                             process_success = call( [ self.matlabExecutable, "-nodesktop",
                                                       "-nosplash", "-nodisplay", "-r", cmd ] )
+                            # on Windows, write a semaphore file that is waited on below;
+                            # this is because the Windows Matlab executable starts another process and
+                            # exits right away.
+                            while not os.path.isfile( self.matlabMsgPath+'.done' ):
+                                time.sleep(0.1) # 0.1 seconds
+                            os.remove( self.matlabMsgPath+'.done' )
                             print("----------------------------------------------------------------------")
                         else:
                             # TODO: other operating systems
@@ -357,7 +363,13 @@ class MatlabBridgeDetectorI(cvac.Detector, threading.Thread):
                         # TODO: windows commands
                         print("----------------------------------------------------------------------")
                         process_success = call( [ self.matlabExecutable, "-nodesktop",
-                                                 "-nosplash", "-nodisplay", "-r", cmd ] )
+                                                 "-nosplash", "-automation", "-r", cmd ] )
+                        # on Windows, write a semaphore file that is waited on below;
+                        # this is because the Windows Matlab executable starts another process and
+                        # exits right away.
+                        while not os.path.isfile( self.matlabMsgPath+'.done' ):
+                            time.sleep(0.1) # 0.1 seconds
+                        os.remove( self.matlabMsgPath+'.done' )
                         print("----------------------------------------------------------------------")
                     else:
                         # TODO: other operating systems

@@ -145,6 +145,14 @@ function [] = trackerService( msg_path, matlab_bridge_dir, easy_data_dir )
     fod = fopen( msg_path, 'w');
     fwrite(fod, out_buffer, 'uint8');
     fclose(fod);
+
+    % on Windows, write a semaphore file that is waited on in the
+    % Python code
+    if ispc
+        touch = fopen( [msg_path '.done'], 'w');
+        fclose(touch);
+    end
+
 end
 
     
