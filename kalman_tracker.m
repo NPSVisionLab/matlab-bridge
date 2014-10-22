@@ -122,10 +122,10 @@ function [] = trackerService( msg_path, matlab_bridge_dir, easy_data_dir )
             filepath = fullfile( easy_data_dir, ...
                                  arts.labelable(a).sub.path.directory.relativePath, ...
                                  arts.labelable(a).sub.path.filename );
-            % display( ['debug: Will process artifact ' filepath] );
-            % positions = detectAndTrack( filepath );
-            display( ['warn: FAKING processing of artifact ' filepath] );
-            positions = [25 49; 35 59; 32 63];
+            display( ['debug: Will process artifact ' filepath] );
+            positions = detectAndTrack( filepath );
+            %display( ['warn: FAKING processing of artifact ' filepath] );
+            %positions = [25 49; 35 59; 32 63];
             
             % insert the positions into the ResultSet as a track
             %todo: [resultset result] = addResult( resultset, arts.labelable(a) );
