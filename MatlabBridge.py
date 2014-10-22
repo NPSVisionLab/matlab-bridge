@@ -130,7 +130,15 @@ def to_CVAC_ResultSet ( protobuf_matlab_bridge_msg ):
                 pt2d = cvac.Point2D(x=frm.loc.x,y=frm.loc.y)
                 frmLoc = cvac.FrameLocation( frame=vst, loc=pt2d, occluded=frm.occluded,outOfFrame=frm.outOfFrame )
                 track.append( frmLoc )
-            ftlabelable = cvac.LabeledTrack( confidence = protobuf_matlab_bridge_msg.res.results.rslt[ridx].foundLabels.labeledTrack[0].confidence, lab = ftlab, sub = ftsub, keyframesLocations=track, interp=cvac.Interpolation.DISCRETE )
+            if ( protobuf_matlab_bridge_msg.res.results.rslt[0].foundLabels.labeledTrack[0].interp == 0 ):
+                interpol = cvac.Interpolation.DISCRETE
+            elif ( protobuf_matlab_bridge_msg.res.results.rslt[0].foundLabels.labeledTrack[0].interp == 1 ):
+                interpol = cvac.Interpolation.LINEAR
+            elif ( protobuf_matlab_bridge_msg.res.results.rslt[0].foundLabels.labeledTrack[0].interp == 2 ):
+                interpol = cvac.Interpolation.POLYNOMIAL
+            else:
+                print "error: interpolation type not supported"
+            ftlabelable = cvac.LabeledTrack( confidence = protobuf_matlab_bridge_msg.res.results.rslt[ridx].foundLabels.labeledTrack[0].confidence, lab = ftlab, sub = ftsub, keyframesLocations=track, interp=interpol )
         
         if flabelable and ftlabelable:
             rslt_set.append( cvac.Result( olabelable, [ flabelable, ftlabelable ] ) )

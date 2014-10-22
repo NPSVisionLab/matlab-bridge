@@ -104,7 +104,7 @@ function [] = trackerService( msg_path, matlab_bridge_dir, easy_data_dir )
     resultset.results = pblib_set(resultset.results, 'rslt', pb_read_Result());
 
     % fill the ResultSet with the originals
-    resultset = tempSetAll( in_protobuf_msg, resultset );
+    % resultset = tempSetAll( in_protobuf_msg, resultset );
 
     %   number of classes in runset
     nclass  = length( in_protobuf_msg.run.purposedLists.purlist );
