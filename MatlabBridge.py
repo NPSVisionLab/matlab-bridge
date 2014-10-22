@@ -144,8 +144,11 @@ def to_CVAC_ResultSet ( protobuf_matlab_bridge_msg ):
             rslt_set.append( cvac.Result( olabelable, [ flabelable, ftlabelable ] ) )
         elif flabelable:
             rslt_set.append( cvac.Result( olabelable, [ flabelable ] ) )
-        else:
+        elif flabelable:
             rslt_set.append( cvac.Result( olabelable, [ ftlabelable ] ) )
+        else:
+            print "debug: didn't find a label, so setting an empty one"
+            rslt_set.append( cvac.Result( olabelable, [ cvac.Labelable() ] ) )
     
     resultset = cvac.ResultSet( rslt_set )
     
