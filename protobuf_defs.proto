@@ -160,6 +160,16 @@ message Point2D {
     optional int32 y = 2;
 }
 
+//class PreciseLocation extends Location {
+//  float centerX;
+//  float centerY;
+//};
+message PreciseLocation {
+    optional float centerX;
+    optional float centerY;
+};
+
+
 //["clr:generic:List"] sequence<Labelable> LabelableList;
 message LabelableList {
     repeated Labelable labelable = 1;
