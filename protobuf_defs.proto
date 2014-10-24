@@ -59,12 +59,33 @@ message FilePath {
 //    int width = 0;
 //    int height = 0;
 //  };
-message Substrate {
-    optional bool isImage = 1 [default = true];
-    optional bool isVideo = 2 [default = false];
+//message Substrate {
+//    optional bool isImage = 1 [default = true];
+//    optional bool isVideo = 2 [default = false];
+//    optional FilePath path = 3;
+//    optional int32 width = 4 [default = 0];
+//    optional int32 height = 5 [default = 0];
+//}
+message ImageSubstrate {
+    optional int32 width = 1 [default = 0];
+    optional int32 height = 2 [default = 0];
     optional FilePath path = 3;
-    optional int32 width = 4 [default = 0];
-    optional int32 height = 5 [default = 0];
+
+}
+
+message VideoSubstrate {
+    optional int32 width = 1 [default = 0];
+    optional int32 height = 2 [default = 0];
+    optional FilePath path = 3;
+    repeated FramePathPair frames = 4;
+}
+
+// the following data structure holds a
+// <frame#,path> pair for a video represented
+// as a sequence of frames
+message FramePathPair {
+    optional int64 frameNum = 1;
+    optional string path = 2;
 }
 
 //struct Semantics {
@@ -101,7 +122,8 @@ message Label {
 message Labelable {
     optional float confidence = 1 [default = 0.0];
     optional Label lab = 2;
-    optional Substrate sub = 3;
+    optional ImageSubstrate imgSub = 3;
+    optional VideoSubstrate vidSub = 4;
 }
 
 //class LabeledTrack extends Labelable {
@@ -117,9 +139,10 @@ message LabeledTrack {
     }
     optional float confidence = 1 [default = 0.0];
     optional Label lab = 2;
-    optional Substrate sub = 3;
-    optional FrameLocationList keyframesLocations = 4;
-    optional Interpolation interp = 5 [default = DISCRETE];
+    optional ImageSubstrate imgSub = 3;
+    optional VideoSubstrate vidSub = 4;
+    optional FrameLocationList keyframesLocations = 5;
+    optional Interpolation interp = 6 [default = DISCRETE];
 }
 
 //sequence<FrameLocation> FrameLocationList;
