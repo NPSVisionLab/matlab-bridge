@@ -164,6 +164,7 @@ message Point2D {
 //["clr:generic:List"] sequence<Labelable> LabelableList;
 message LabelableList {
     repeated Labelable labelable = 1;
+    repeated LabeledTrack labeledTrack = 2;
 }
 
 //struct Purpose {
