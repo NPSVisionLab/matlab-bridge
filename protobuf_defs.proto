@@ -153,8 +153,8 @@ message VideoSeekTime {
 //class Location {
 //  };
 //  class Point2D extends Location {
-//    int32 x;
-//    int32 y;
+//    int x;
+//    int y;
 //  };
 message Point2D {
     optional int32 x = 1;
