@@ -136,8 +136,9 @@ message FrameLocationList {
 message FrameLocation {
     optional VideoSeekTime frame = 1;
     optional Point2D loc = 2;
-    optional bool occluded = 3 [default = false];
-    optional bool outOfFrame = 4 [default = false];
+    optional Point2DPrecise locPrecise = 3;
+    optional bool occluded = 4 [default = false];
+    optional bool outOfFrame = 5 [default = false];
 }
 
 //struct VideoSeekTime {
@@ -152,8 +153,8 @@ message VideoSeekTime {
 //class Location {
 //  };
 //  class Point2D extends Location {
-//    int x;
-//    int y;
+//    int32 x;
+//    int32 y;
 //  };
 message Point2D {
     optional int32 x = 1;
