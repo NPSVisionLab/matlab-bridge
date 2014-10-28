@@ -104,7 +104,7 @@ def retrieve_message( msgPath ):
         
     return protobuf_matlab_bridge_msg
 
-def to_CVAC_ResultSet ( protobuf_matlab_bridge_msg ):
+def to_CVAC_ResultSet( protobuf_matlab_bridge_msg ):
     rslt_set = []
     for ridx, rslt in enumerate( protobuf_matlab_bridge_msg.res.results.rslt ):
         opath = cvac.FilePath( directory = cvac.DirectoryPath( relativePath = protobuf_matlab_bridge_msg.res.results.rslt[ridx].original.sub.path.directory.relativePath ), filename = protobuf_matlab_bridge_msg.res.results.rslt[ridx].original.sub.path.filename )
@@ -127,7 +127,12 @@ def to_CVAC_ResultSet ( protobuf_matlab_bridge_msg ):
             track = []
             for fidx, frm in enumerate(protobuf_matlab_bridge_msg.res.results.rslt[ridx].foundLabels.labeledTrack[0].keyframesLocations.framelocation):
                 vst = cvac.VideoSeekTime(time=frm.frame.time, framecnt=frm.frame.framecnt)
-                pt2d = cvac.Point2D(x=frm.loc.x,y=frm.loc.y)
+                if frm.loc:
+                    pt2d = cvac.Point2D(x=frm.loc.x,y=frm.loc.y)
+                elif frm.locPrecise:
+                    pt2d = cvac.PreciseLocation(centerX=frm.locPrecise.x, centerY=frm.locPrecise.y)
+                else:
+                    print "error: unsupported location type"
                 frmLoc = cvac.FrameLocation( frame=vst, loc=pt2d, occluded=frm.occluded,outOfFrame=frm.outOfFrame )
                 track.append( frmLoc )
             if ( protobuf_matlab_bridge_msg.res.results.rslt[0].foundLabels.labeledTrack[0].interp == 0 ):
