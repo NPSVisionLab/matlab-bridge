@@ -51,21 +51,13 @@ message FilePath {
     optional string filename = 2 [default = ""];
 }
 
-//struct Substrate {
-//    bool isImage = true;
-//    bool isVideo = false;
-//
-//    FilePath path;
+// class Substrate {
 //    int width = 0;
 //    int height = 0;
 //  };
-//message Substrate {
-//    optional bool isImage = 1 [default = true];
-//    optional bool isVideo = 2 [default = false];
-//    optional FilePath path = 3;
-//    optional int32 width = 4 [default = 0];
-//    optional int32 height = 5 [default = 0];
-//}
+//class ImageSubstrate extends Substrate {
+//    FilePath path;
+//  };
 message ImageSubstrate {
     optional int32 width = 1 [default = 0];
     optional int32 height = 2 [default = 0];
@@ -73,11 +65,16 @@ message ImageSubstrate {
 
 }
 
+//dictionary<int, FilePath> FramePaths;
+//  class VideoSubstrate extends Substrate {
+//    FilePath videopath;
+//    FramePaths framepaths;
+//  };
 message VideoSubstrate {
     optional int32 width = 1 [default = 0];
     optional int32 height = 2 [default = 0];
-    optional FilePath path = 3;
-    repeated FramePathPair frames = 4;
+    optional FilePath videopath = 3;
+    repeated FramePathPair framepaths = 4;
 }
 
 // the following data structure holds a
