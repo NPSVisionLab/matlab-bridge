@@ -21,66 +21,89 @@ end
 
 % the actual tracking function; makes lots of assumptions on the scene
 % and motion
-function [trackedLocations] = detectAndTrack( inputVideoFile )
-    
-    display( ['debug: attempting detectAndTrack on file ' inputVideoFile] )
+function [trackedLocations] = detectAndTrack( inputVideo, videotype )
     trackedLocations = [];
-    try
-        videoReader = vision.VideoFileReader(inputVideoFile);
-    catch err
-        if (strcmp(err.identifier,'dspshared:dspmmfileinfo:unavailableFile'))
-            display( ['warn: file not found, skipping: ' inputVideoFile] )
-            return;
-        else
-            rethrow(err);
-        end
-    end
     foregroundDetector = vision.ForegroundDetector('NumTrainingFrames', 10, 'InitialVariance', 0.05);
     blobAnalyzer = vision.BlobAnalysis('AreaOutputPort', false, 'MinimumBlobArea', 70);
-
     kalmanFilter = []; isTrackInitialized = false;
     fcnt = 0;
-    while ~isDone(videoReader)
-        colorImage  = step(videoReader);
-        fcnt = fcnt+1;
-        trackedLocations = [trackedLocations; NaN NaN]; %#ok<AGROW>
     
-        foregroundMask = step(foregroundDetector, rgb2gray(colorImage));
-        detectedLocation = step(blobAnalyzer, foregroundMask);
-        isObjectDetected = size(detectedLocation, 1) > 0;
-    
-        if ~isTrackInitialized
-            if isObjectDetected
-                kalmanFilter = configureKalmanFilter('ConstantAcceleration', ...
-                                                     detectedLocation(1,:), ...
-                                                     [1 1 1]*1e5, [25, 10, 10], 25); 
-                isTrackInitialized = true;
+    % The method of stepping through the video depends on videotype
+    if ( videotype == 1 ) % single video file
+        display( ['debug: attempting detectAndTrack on file ' inputVideo] )
+        try
+            videoReader = vision.VideoFileReader(inputVideo);
+        catch err
+            if (strcmp(err.identifier,'dspshared:dspmmfileinfo:unavailableFile'))
+                display( ['warn: file not found, skipping: ' inputVideo] )
+                return;
+            else
+                rethrow(err);
             end
-        else
-            if isObjectDetected
-                % Reduce the measurement noise by calling predict, then correct
-                % predictedLocation = predict(kalmanFilter);
-                trackedLocation = correct(kalmanFilter, detectedLocation(1,:));
-            else % Object is missing
-                trackedLocation = predict(kalmanFilter);
-            end
-            trackedLocations(fcnt,:) = trackedLocation;
         end
-    end % while
+        
+        while ~isDone(videoReader)
+            colorImage  = step(videoReader);
+            fcnt = fcnt+1;
+            trackedLocations = [trackedLocations; NaN NaN]; %#ok<AGROW>
 
-    release(videoReader);
+            foregroundMask = step(foregroundDetector, rgb2gray(colorImage));
+            detectedLocation = step(blobAnalyzer, foregroundMask);
+            isObjectDetected = size(detectedLocation, 1) > 0;
 
+            if ~isTrackInitialized
+                if isObjectDetected
+                    kalmanFilter = configureKalmanFilter('ConstantAcceleration', ...
+                                                         detectedLocation(1,:), ...
+                                                         [1 1 1]*1e5, [25, 10, 10], 25); 
+                    isTrackInitialized = true;
+                end
+            else
+                if isObjectDetected
+                    % Reduce the measurement noise by calling predict, then correct
+                    % predictedLocation = predict(kalmanFilter);
+                    trackedLocation = correct(kalmanFilter, detectedLocation(1,:));
+                else % Object is missing
+                    trackedLocation = predict(kalmanFilter);
+                end
+                trackedLocations(fcnt,:) = trackedLocation;
+            end
+        end % while
+
+        release(videoReader);
+    else % video is represented by multiple images
+        display( ['debug: attempting detectAndTrack on a video composed of multiple images' ] )
+        num_frames = length( inputVideo );
+        for frmidx=1:num_frames
+            framepath = inputVideo( frmidx ).path;
+            colorImage  = imread( framepath );
+            fcnt = fcnt+1;
+            trackedLocations = [trackedLocations; NaN NaN]; %#ok<AGROW>
+
+            foregroundMask = step(foregroundDetector, rgb2gray(colorImage));
+            detectedLocation = step(blobAnalyzer, foregroundMask);
+            isObjectDetected = size(detectedLocation, 1) > 0;
+
+            if ~isTrackInitialized
+                if isObjectDetected
+                    kalmanFilter = configureKalmanFilter('ConstantAcceleration', ...
+                                                         detectedLocation(1,:), ...
+                                                         [1 1 1]*1e5, [25, 10, 10], 25); 
+                    isTrackInitialized = true;
+                end
+            else
+                if isObjectDetected
+                    % Reduce the measurement noise by calling predict, then correct
+                    % predictedLocation = predict(kalmanFilter);
+                    trackedLocation = correct(kalmanFilter, detectedLocation(1,:));
+                else % Object is missing
+                    trackedLocation = predict(kalmanFilter);
+                end
+                trackedLocations(fcnt,:) = trackedLocation;
+            end
+        end % for
+    end
 end % function
-
-% the actual tracking function; makes lots of assumptions on the scene
-% and motion (image version)
-function [trackedLocations] = detectAndTrackImage( inputImageFile )
-    
-    display( ['debug: I dont know how this is going to work yet... ' inputImageFile] )
-    trackedLocations = [];
-
-end % function
-
     
 % protobuf conversion, parsing of messages, 
 function [] = trackerService( msg_path, matlab_bridge_dir, easy_data_dir )
@@ -128,23 +151,27 @@ function [] = trackerService( msg_path, matlab_bridge_dir, easy_data_dir )
         % display( [ 'debug: Artifacts of type: ' num2str(purpose) ':' ] )
         arts = in_protobuf_msg.run.purposedLists.purlist(plidx).labeledArtifacts;
         for artidx = 1:length(arts.labelable)
-            labelable = arts.labelable(artidx);
-            % relative_path is relative to Easy data directory
-            filepath = fullfile( easy_data_dir, ...
-                                 arts.labelable(artidx).sub.path.directory.relativePath, ...
-                                 arts.labelable(artidx).sub.path.filename );
             display( ['debug: Will process artifact ' filepath] );
             % call the appropriate function depending on whether or not
-            % the artifact is an image or video
-            if ( arts.labelable(artidx).sub.isVideo == true )
-                display( ['debug: artifact is a video '] );
-                positions = detectAndTrack( filepath );
-            elseif ( arts.labelable(artidx).sub.isImage == true )
-                display( ['debug: artifact is an image '] );
-                positions = detectAndTrackImage( filepath );
+            % the video consists of a single video file or multiple images
+            % (frames)
+            if ( isempty( arts.labelable(artidx).vidSub.framepaths ) && isempty( arts.labelable(artidx).vidSub.videopath ) )
+                display( ['debug: video substrate is empty'] );
+            elseif ( ~isempty( arts.labelable(artidx).vidSub.framepaths ) && ~isempty( arts.labelable(artidx).vidSub.videopath ) )
+                display( ['debug: video ROI specified. this is not handled yet'] );
+            elseif ( isempty( arts.labelable(artidx).vidSub.framepaths ) )
+                % relative_path is relative to Easy data directory
+                videopath = fullfile( easy_data_dir, ...
+                                 arts.labelable(artidx).vidSub.videopath.directory.relativePath, ...
+                                 arts.labelable(artidx).vidSub.videopath.filename );
+                display( ['debug: video is a single video file'] );
+                videotype = 1;
+                positions = detectAndTrack( videopath, videotype );
             else
-                display( ['error: unknown artifact type '] );
-                positions = [];
+                framepaths = arts.labelable(artidx).vidSub.framepaths;
+                display( ['debug: video is composed of multiple image files'] );
+                videotype = 0;
+                positions = detectAndTrackImage( framepaths, videotype );
             end
             
             %display( ['warn: FAKING processing of artifact ' filepath] );
@@ -155,9 +182,6 @@ function [] = trackerService( msg_path, matlab_bridge_dir, easy_data_dir )
             positions = minus(positions,1);
 
             % insert the positions into the ResultSet as a track
-            % [resultset result] = addResult( resultset, labelable );
-            % pbTrack = createPbTrack( positions );
-            % addFoundLabelable( result, pbTrack );
             resultset = setPositions( in_protobuf_msg, resultset, count, plidx, artidx, positions );
             count = count + 1;
         end
