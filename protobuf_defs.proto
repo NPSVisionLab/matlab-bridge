@@ -159,7 +159,7 @@ message FrameLocationList {
 message FrameLocation {
     optional VideoSeekTime frame = 1;
     optional Point2D loc = 2;
-    optional Point2DPrecise locPrecise = 3;
+    optional PreciseLocation locPrecise = 3;
     optional bool occluded = 4 [default = false];
     optional bool outOfFrame = 5 [default = false];
 }
@@ -182,6 +182,15 @@ message VideoSeekTime {
 message Point2D {
     optional int32 x = 1;
     optional int32 y = 2;
+}
+
+//class PreciseLocation extends Location {
+//    float centerX;
+//    float centerY;
+//  };
+message PreciseLocation {
+    optional float x = 1;
+    optional float y = 2;
 }
 
 //["clr:generic:List"] sequence<Labelable> LabelableList;
