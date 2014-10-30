@@ -144,7 +144,7 @@ def to_CVAC_ResultSet( protobuf_matlab_bridge_msg ):
             flab = cvac.Label( hasLabel = protobuf_matlab_bridge_msg.res.results.rslt[ridx].foundLabels.labelable[0].lab.hasLabel, name = protobuf_matlab_bridge_msg.res.results.rslt[ridx].foundLabels.labelable[0].lab.name , semantix = cvac.Semantics( url = protobuf_matlab_bridge_msg.res.results.rslt[ridx].foundLabels.labelable[0].lab.semantix.url ) )
             if( protobuf_matlab_bridge_msg.res.results.rslt[ridx].foundLabels.labelable[0].vidSub ): # VideoSubstrate
                 flabelable = cvac.Labelable( confidence = protobuf_matlab_bridge_msg.res.results.rslt[ridx].foundLabels.labelable[0].confidence, lab = flab, vidSub = fsub )
-            else( protobuf_matlab_bridge_msg.res.results.rslt[ridx].foundLabels.labelable[0].imgSub ): # ImageSubstrate
+            else # ImageSubstrate
                 flabelable = cvac.Labelable( confidence = protobuf_matlab_bridge_msg.res.results.rslt[ridx].foundLabels.labelable[0].confidence, lab = flab, imgSub = fsub )
         
         #   LabeledTrack case
@@ -180,7 +180,7 @@ def to_CVAC_ResultSet( protobuf_matlab_bridge_msg ):
                 print "error: interpolation type not supported"
             if( protobuf_matlab_bridge_msg.res.results.rslt[ridx].foundLabels.labeledTrack[0].vidSub ): # VideoSubstrate
                 ftlabelable = cvac.LabeledTrack( confidence = protobuf_matlab_bridge_msg.res.results.rslt[ridx].foundLabels.labeledTrack[0].confidence, lab = ftlab, vidSub = ftsub, keyframesLocations=track, interp=interpol )
-            else( protobuf_matlab_bridge_msg.res.results.rslt[ridx].foundLabels.labeledTrack[0].imgSub ): # ImageSubstrate
+            else # ImageSubstrate
                 ftlabelable = cvac.LabeledTrack( confidence = protobuf_matlab_bridge_msg.res.results.rslt[ridx].foundLabels.labeledTrack[0].confidence, lab = ftlab, imgSub = ftsub, keyframesLocations=track, interp=interpol )
         
 
