@@ -117,22 +117,47 @@ def retrieve_message( msgPath ):
 def to_CVAC_ResultSet( protobuf_matlab_bridge_msg ):
     rslt_set = []
     for ridx, rslt in enumerate( protobuf_matlab_bridge_msg.res.results.rslt ):
-        opath = cvac.FilePath( directory = cvac.DirectoryPath( relativePath = protobuf_matlab_bridge_msg.res.results.rslt[ridx].original.sub.path.directory.relativePath ), filename = protobuf_matlab_bridge_msg.res.results.rslt[ridx].original.sub.path.filename )
-        osub = cvac.Substrate( isImage = protobuf_matlab_bridge_msg.res.results.rslt[ridx].original.sub.isImage, isVideo = protobuf_matlab_bridge_msg.res.results.rslt[ridx].original.sub.isVideo, path = opath, width = protobuf_matlab_bridge_msg.res.results.rslt[ridx].original.sub.width, height = protobuf_matlab_bridge_msg.res.results.rslt[ridx].original.sub.height )
+        # set original label for each result
+        if( protobuf_matlab_bridge_msg.res.results.rslt[ridx].original.vidSub ): # VideoSubstrate
+            opath = cvac.FilePath( directory = cvac.DirectoryPath( relativePath = protobuf_matlab_bridge_msg.res.results.rslt[ridx].original.vidSub.videopath.directory.relativePath ), filename = protobuf_matlab_bridge_msg.res.results.rslt[ridx].original.vidSub.videopath.filename )
+            osub = cvac.VideoSubstrate( videopath = opath, width = protobuf_matlab_bridge_msg.res.results.rslt[ridx].original.vidSub.width, height = protobuf_matlab_bridge_msg.res.results.rslt[ridx].original.vidSub.height )
+        elif( protobuf_matlab_bridge_msg.res.results.rslt[ridx].original.imgSub ): # ImageSubstrate
+            opath = cvac.FilePath( directory = cvac.DirectoryPath( relativePath = protobuf_matlab_bridge_msg.res.results.rslt[ridx].original.imgSub.path.directory.relativePath ), filename = protobuf_matlab_bridge_msg.res.results.rslt[ridx].original.imgSub.path.filename )
+            osub = cvac.ImageSubstrate( path = opath, width = protobuf_matlab_bridge_msg.res.results.rslt[ridx].original.imgSub.width, height = protobuf_matlab_bridge_msg.res.results.rslt[ridx].original.imgSub.height )
+        else:
+            print "error: unsupported Labelable (original) substrate"
         olab = cvac.Label( hasLabel = protobuf_matlab_bridge_msg.res.results.rslt[ridx].original.lab.hasLabel, name = protobuf_matlab_bridge_msg.res.results.rslt[ridx].original.lab.name , semantix = cvac.Semantics( url = protobuf_matlab_bridge_msg.res.results.rslt[ridx].original.lab.semantix.url ) )
         olabelable = cvac.Labelable( confidence = protobuf_matlab_bridge_msg.res.results.rslt[ridx].original.confidence, lab = olab, sub = osub )
         
+        # set found label for each result
+        #   Labelable case
         flabelable = []
-        if protobuf_matlab_bridge_msg.res.results.rslt[0].foundLabels.labelable:
-            fpath = cvac.FilePath( directory = cvac.DirectoryPath( relativePath = protobuf_matlab_bridge_msg.res.results.rslt[ridx].foundLabels.labelable[0].sub.path.directory.relativePath ), filename = protobuf_matlab_bridge_msg.res.results.rslt[ridx].original.sub.path.filename )
-            fsub = cvac.Substrate( isImage = protobuf_matlab_bridge_msg.res.results.rslt[ridx].original.sub.isImage, isVideo = protobuf_matlab_bridge_msg.res.results.rslt[ridx].original.sub.isVideo, path = fpath, width = protobuf_matlab_bridge_msg.res.results.rslt[ridx].original.sub.width, height = protobuf_matlab_bridge_msg.res.results.rslt[ridx].original.sub.height )
+        if( protobuf_matlab_bridge_msg.res.results.rslt[0].foundLabels.labelable ):
+            if( protobuf_matlab_bridge_msg.res.results.rslt[ridx].foundLabels.labelable[0].vidSub ): # VideoSubstrate
+                fpath = cvac.FilePath( directory = cvac.DirectoryPath( relativePath = protobuf_matlab_bridge_msg.res.results.rslt[ridx].foundLabels.labelable[0].vidSub.videopath.directory.relativePath ), filename = protobuf_matlab_bridge_msg.res.results.rslt[ridx].original.vidSub.videopath.filename )
+                fsub = cvac.VideoSubstrate( videopath = fpath, width = protobuf_matlab_bridge_msg.res.results.rslt[ridx].original.vidSub.width, height = protobuf_matlab_bridge_msg.res.results.rslt[ridx].original.vidSub.height )
+            elif( protobuf_matlab_bridge_msg.res.results.rslt[ridx].foundLabels.labelable[0].imgSub ): # ImageSubstrate
+                fpath = cvac.FilePath( directory = cvac.DirectoryPath( relativePath = protobuf_matlab_bridge_msg.res.results.rslt[ridx].foundLabels.labelable[0].imgSub.path.directory.relativePath ), filename = protobuf_matlab_bridge_msg.res.results.rslt[ridx].original.imgSub.path.filename )
+                fsub = cvac.ImageSubstrate( path = fpath, width = protobuf_matlab_bridge_msg.res.results.rslt[ridx].original.imgSub.width, height = protobuf_matlab_bridge_msg.res.results.rslt[ridx].original.imgSub.height )
+            else:
+                print "error: unsupported Labelable (found) substrate"
             flab = cvac.Label( hasLabel = protobuf_matlab_bridge_msg.res.results.rslt[ridx].foundLabels.labelable[0].lab.hasLabel, name = protobuf_matlab_bridge_msg.res.results.rslt[ridx].foundLabels.labelable[0].lab.name , semantix = cvac.Semantics( url = protobuf_matlab_bridge_msg.res.results.rslt[ridx].foundLabels.labelable[0].lab.semantix.url ) )
-            flabelable = cvac.Labelable( confidence = protobuf_matlab_bridge_msg.res.results.rslt[ridx].foundLabels.labelable[0].confidence, lab = flab, sub = fsub )
+            if( protobuf_matlab_bridge_msg.res.results.rslt[ridx].foundLabels.labelable[0].vidSub ): # VideoSubstrate
+                flabelable = cvac.Labelable( confidence = protobuf_matlab_bridge_msg.res.results.rslt[ridx].foundLabels.labelable[0].confidence, lab = flab, vidSub = fsub )
+            else( protobuf_matlab_bridge_msg.res.results.rslt[ridx].foundLabels.labelable[0].imgSub ): # ImageSubstrate
+                flabelable = cvac.Labelable( confidence = protobuf_matlab_bridge_msg.res.results.rslt[ridx].foundLabels.labelable[0].confidence, lab = flab, imgSub = fsub )
         
+        #   LabeledTrack case
         ftlabelable = []
-        if protobuf_matlab_bridge_msg.res.results.rslt[0].foundLabels.labeledTrack:
-            ftpath = cvac.FilePath( directory = cvac.DirectoryPath( relativePath = protobuf_matlab_bridge_msg.res.results.rslt[ridx].foundLabels.labeledTrack[0].sub.path.directory.relativePath ), filename = protobuf_matlab_bridge_msg.res.results.rslt[ridx].original.sub.path.filename )
-            ftsub = cvac.Substrate( isImage = protobuf_matlab_bridge_msg.res.results.rslt[ridx].original.sub.isImage, isVideo = protobuf_matlab_bridge_msg.res.results.rslt[ridx].original.sub.isVideo, path = ftpath, width = protobuf_matlab_bridge_msg.res.results.rslt[ridx].original.sub.width, height = protobuf_matlab_bridge_msg.res.results.rslt[ridx].original.sub.height )
+        if( protobuf_matlab_bridge_msg.res.results.rslt[0].foundLabels.labeledTrack ):
+            if( protobuf_matlab_bridge_msg.res.results.rslt[ridx].foundLabels.labeledTrack[0].vidSub ): # VideoSubstrate
+                ftpath = cvac.FilePath( directory = cvac.DirectoryPath( relativePath = protobuf_matlab_bridge_msg.res.results.rslt[ridx].foundLabels.labeledTrack[0].vidSub.videopath.directory.relativePath ), filename = protobuf_matlab_bridge_msg.res.results.rslt[ridx].original.vidSub.videopath.filename )
+                ftsub = cvac.VideoSubstrate( videopath = ftpath, width = protobuf_matlab_bridge_msg.res.results.rslt[ridx].original.vidSub.width, height = protobuf_matlab_bridge_msg.res.results.rslt[ridx].original.vidSub.height )
+            elif( protobuf_matlab_bridge_msg.res.results.rslt[ridx].foundLabels.labeledTrack[0].imgSub ): # ImageSubstrate
+                ftpath = cvac.FilePath( directory = cvac.DirectoryPath( relativePath = protobuf_matlab_bridge_msg.res.results.rslt[ridx].foundLabels.labeledTrack[0].imgSub.path.directory.relativePath ), filename = protobuf_matlab_bridge_msg.res.results.rslt[ridx].original.imgSub.path.filename )
+                ftsub = cvac.ImageSubstrate( path = ftpath, width = protobuf_matlab_bridge_msg.res.results.rslt[ridx].original.imgSub.width, height = protobuf_matlab_bridge_msg.res.results.rslt[ridx].original.imgSub.height )
+            else:
+                print "error: unsupported LabeledTrack (found) substrate"
             ftlab = cvac.Label( hasLabel = protobuf_matlab_bridge_msg.res.results.rslt[ridx].foundLabels.labeledTrack[0].lab.hasLabel, name = protobuf_matlab_bridge_msg.res.results.rslt[ridx].foundLabels.labeledTrack[0].lab.name , semantix = cvac.Semantics( url = protobuf_matlab_bridge_msg.res.results.rslt[ridx].foundLabels.labeledTrack[0].lab.semantix.url ) )
             track = []
             for fidx, frm in enumerate(protobuf_matlab_bridge_msg.res.results.rslt[ridx].foundLabels.labeledTrack[0].keyframesLocations.framelocation):
@@ -153,8 +178,14 @@ def to_CVAC_ResultSet( protobuf_matlab_bridge_msg ):
                 interpol = cvac.Interpolation.POLYNOMIAL
             else:
                 print "error: interpolation type not supported"
-            ftlabelable = cvac.LabeledTrack( confidence = protobuf_matlab_bridge_msg.res.results.rslt[ridx].foundLabels.labeledTrack[0].confidence, lab = ftlab, sub = ftsub, keyframesLocations=track, interp=interpol )
+            if( protobuf_matlab_bridge_msg.res.results.rslt[ridx].foundLabels.labeledTrack[0].vidSub ): # VideoSubstrate
+                ftlabelable = cvac.LabeledTrack( confidence = protobuf_matlab_bridge_msg.res.results.rslt[ridx].foundLabels.labeledTrack[0].confidence, lab = ftlab, vidSub = ftsub, keyframesLocations=track, interp=interpol )
+            else( protobuf_matlab_bridge_msg.res.results.rslt[ridx].foundLabels.labeledTrack[0].imgSub ): # ImageSubstrate
+                ftlabelable = cvac.LabeledTrack( confidence = protobuf_matlab_bridge_msg.res.results.rslt[ridx].foundLabels.labeledTrack[0].confidence, lab = ftlab, imgSub = ftsub, keyframesLocations=track, interp=interpol )
         
+
+        
+        # append result
         if flabelable and ftlabelable:
             rslt_set.append( cvac.Result( olabelable, [ flabelable, ftlabelable ] ) )
         elif flabelable:
