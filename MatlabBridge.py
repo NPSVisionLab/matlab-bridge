@@ -143,9 +143,9 @@ def to_CVAC_ResultSet( protobuf_matlab_bridge_msg ):
                 print "error: unsupported Labelable (found) substrate"
             flab = cvac.Label( hasLabel = protobuf_matlab_bridge_msg.res.results.rslt[ridx].foundLabels.labelable[0].lab.hasLabel, name = protobuf_matlab_bridge_msg.res.results.rslt[ridx].foundLabels.labelable[0].lab.name , semantix = cvac.Semantics( url = protobuf_matlab_bridge_msg.res.results.rslt[ridx].foundLabels.labelable[0].lab.semantix.url ) )
             if( protobuf_matlab_bridge_msg.res.results.rslt[ridx].foundLabels.labelable[0].vidSub ): # VideoSubstrate
-                flabelable = cvac.Labelable( confidence = protobuf_matlab_bridge_msg.res.results.rslt[ridx].foundLabels.labelable[0].confidence, lab = flab, vidSub = fsub )
+                flabelable = cvac.Labelable( confidence = protobuf_matlab_bridge_msg.res.results.rslt[ridx].foundLabels.labelable[0].confidence, lab = flab, sub = fsub )
             else: # ImageSubstrate
-                flabelable = cvac.Labelable( confidence = protobuf_matlab_bridge_msg.res.results.rslt[ridx].foundLabels.labelable[0].confidence, lab = flab, imgSub = fsub )
+                flabelable = cvac.Labelable( confidence = protobuf_matlab_bridge_msg.res.results.rslt[ridx].foundLabels.labelable[0].confidence, lab = flab, sub = fsub )
         
         #   LabeledTrack case
         ftlabelable = []
@@ -179,9 +179,9 @@ def to_CVAC_ResultSet( protobuf_matlab_bridge_msg ):
             else:
                 print "error: interpolation type not supported"
             if( protobuf_matlab_bridge_msg.res.results.rslt[ridx].foundLabels.labeledTrack[0].vidSub ): # VideoSubstrate
-                ftlabelable = cvac.LabeledTrack( confidence = protobuf_matlab_bridge_msg.res.results.rslt[ridx].foundLabels.labeledTrack[0].confidence, lab = ftlab, vidSub = ftsub, keyframesLocations=track, interp=interpol )
+                ftlabelable = cvac.LabeledTrack( confidence = protobuf_matlab_bridge_msg.res.results.rslt[ridx].foundLabels.labeledTrack[0].confidence, lab = ftlab, sub = ftsub, keyframesLocations=track, interp=interpol )
             else: # ImageSubstrate
-                ftlabelable = cvac.LabeledTrack( confidence = protobuf_matlab_bridge_msg.res.results.rslt[ridx].foundLabels.labeledTrack[0].confidence, lab = ftlab, imgSub = ftsub, keyframesLocations=track, interp=interpol )
+                ftlabelable = cvac.LabeledTrack( confidence = protobuf_matlab_bridge_msg.res.results.rslt[ridx].foundLabels.labeledTrack[0].confidence, lab = ftlab, sub = ftsub, keyframesLocations=track, interp=interpol )
         
 
         
