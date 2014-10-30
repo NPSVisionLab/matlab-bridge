@@ -60,12 +60,22 @@ def to_protobuf ( run, props, model=None ):
             # LabelProperties not set yet
             # msg.run.purposedLists.purlist[plidx].labeledArtifacts.labelable[laidx].lab.properties = lb.lab.properties
             msg.run.purposedLists.purlist[plidx].labeledArtifacts.labelable[laidx].lab.semantix.url = lb.lab.semantix.url
-            msg.run.purposedLists.purlist[plidx].labeledArtifacts.labelable[laidx].sub.isImage = lb.sub.isImage
-            msg.run.purposedLists.purlist[plidx].labeledArtifacts.labelable[laidx].sub.isVideo = lb.sub.isVideo
-            msg.run.purposedLists.purlist[plidx].labeledArtifacts.labelable[laidx].sub.path.directory.relativePath = lb.sub.path.directory.relativePath
-            msg.run.purposedLists.purlist[plidx].labeledArtifacts.labelable[laidx].sub.path.filename = lb.sub.path.filename
-            msg.run.purposedLists.purlist[plidx].labeledArtifacts.labelable[laidx].sub.width = lb.sub.width
-            msg.run.purposedLists.purlist[plidx].labeledArtifacts.labelable[laidx].sub.height = lb.sub.height
+            
+            if( type( lb.sub ) == cvac.VideoSubstrate ):
+                msg.run.purposedLists.purlist[plidx].labeledArtifacts.labelable[laidx].vidSub.width = lb.sub.width
+                msg.run.purposedLists.purlist[plidx].labeledArtifacts.labelable[laidx].vidSub.height = lb.sub.height
+                msg.run.purposedLists.purlist[plidx].labeledArtifacts.labelable[laidx].vidSub.videopath.directory.relativePath = lb.sub.videopath.directory.relativePath
+                msg.run.purposedLists.purlist[plidx].labeledArtifacts.labelable[laidx].vidSub.videopath.filename = lb.sub.videopath.filename
+                cnt = 0;
+                for key, value in zip( lb.sub.framepaths.keys(), lb.sub.framepaths.values() ):
+                    msg.run.purposedLists.purlist[plidx].labeledArtifacts.labelable[laidx].vidSub.framepaths[ cnt ].frameNum = key
+                    msg.run.purposedLists.purlist[plidx].labeledArtifacts.labelable[laidx].vidSub.framepaths[ cnt ].path = value
+                    cnt = cnt + 1
+            if( type( lb.sub ) == cvac.ImageSubstrate ):
+                msg.run.purposedLists.purlist[plidx].labeledArtifacts.labelable[laidx].imgSub.width = lb.sub.width
+                msg.run.purposedLists.purlist[plidx].labeledArtifacts.labelable[laidx].imgSub.height = lb.sub.height
+                msg.run.purposedLists.purlist[plidx].labeledArtifacts.labelable[laidx].imgSub.path.directory.relativePath = lb.sub.path.directory.relativePath
+                msg.run.purposedLists.purlist[plidx].labeledArtifacts.labelable[laidx].imgSub.path.filename = lb.sub.path.filename
     
     #   Service Model
     if model != None:
