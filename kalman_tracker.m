@@ -151,7 +151,7 @@ function [] = trackerService( msg_path, matlab_bridge_dir, easy_data_dir )
         % display( [ 'debug: Artifacts of type: ' num2str(purpose) ':' ] )
         arts = in_protobuf_msg.run.purposedLists.purlist(plidx).labeledArtifacts;
         for artidx = 1:length(arts.labelable)
-            display( ['debug: Will process artifact ' filepath] );
+            display( ['debug: Will process artifact ' arts.labelable(artidx).vidSub.videopath.filename ] );
             % call the appropriate function depending on whether or not
             % the video consists of a single video file or multiple images
             % (frames)
