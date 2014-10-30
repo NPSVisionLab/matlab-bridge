@@ -247,7 +247,7 @@ function [resultset] = setPositions( in_protobuf_msg, resultset, count, pls, art
     resultset.results.rslt(count).original.lab = pblib_set(resultset.results.rslt(count).original.lab, 'semantix',  pb_read_Semantics());
     resultset.results.rslt(count).original.lab.semantix = pblib_set(resultset.results.rslt(count).original.lab.semantix, 'url', in_protobuf_msg.run.purposedLists.purlist(pls).labeledArtifacts.labelable(art).lab.semantix.url);
     
-    resultset.results.rslt(count).original = pblib_set(resultset.results.rslt(count).original, 'vidSub', pb_read_Substrate());
+    resultset.results.rslt(count).original = pblib_set(resultset.results.rslt(count).original, 'vidSub', pb_read_VideoSubstrate());
     resultset.results.rslt(count).original.vidSub = pblib_set(resultset.results.rslt(count).original.vidSub, 'videopath', pb_read_FilePath());
     resultset.results.rslt(count).original.vidSub.videopath = pblib_set(resultset.results.rslt(count).original.vidSub.videopath, 'directory', pb_read_DirectoryPath());
     resultset.results.rslt(count).original.vidSub.videopath.directory = pblib_set(resultset.results.rslt(count).original.vidSub.videopath.directory, 'relativePath', in_protobuf_msg.run.purposedLists.purlist(pls).labeledArtifacts.labelable(art).vidSub.videopath.directory.relativePath);
@@ -265,7 +265,7 @@ function [resultset] = setPositions( in_protobuf_msg, resultset, count, pls, art
     resultset.results.rslt(count).foundLabels.labeledTrack.lab = pblib_set(resultset.results.rslt(count).foundLabels.labeledTrack.lab, 'semantix',  pb_read_Semantics());
     resultset.results.rslt(count).foundLabels.labeledTrack.lab.semantix = pblib_set(resultset.results.rslt(count).foundLabels.labeledTrack.lab.semantix, 'url', in_protobuf_msg.run.purposedLists.purlist(pls).labeledArtifacts.labelable(art).lab.semantix.url);
     
-    resultset.results.rslt(count).foundLabels.labeledTrack = pblib_set(resultset.results.rslt(count).foundLabels.labeledTrack, 'vidSub', pb_read_Substrate());
+    resultset.results.rslt(count).foundLabels.labeledTrack = pblib_set(resultset.results.rslt(count).foundLabels.labeledTrack, 'vidSub', pb_read_VideoSubstrate());
     resultset.results.rslt(count).foundLabels.labeledTrack.vidSub = pblib_set(resultset.results.rslt(count).foundLabels.labeledTrack.vidSub, 'videopath', pb_read_FilePath());
     resultset.results.rslt(count).foundLabels.labeledTrack.vidSub.videopath = pblib_set(resultset.results.rslt(count).foundLabels.labeledTrack.vidSub.videopath, 'directory', pb_read_DirectoryPath());
     resultset.results.rslt(count).foundLabels.labeledTrack.vidSub.videopath.directory = pblib_set(resultset.results.rslt(count).foundLabels.labeledTrack.vidSub.videopath.directory, 'relativePath', in_protobuf_msg.run.purposedLists.purlist(pls).labeledArtifacts.labelable(art).vidSub.videopath.directory.relativePath);
