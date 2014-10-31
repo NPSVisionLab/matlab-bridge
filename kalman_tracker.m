@@ -72,7 +72,7 @@ function [trackedLocations] = detectAndTrack( inputVideoPath, framepaths, videot
 
         release(videoReader);
     else % video is represented by multiple images
-        display( ['debug: attempting detectAndTrack on a video composed of a folder of frames' ] )
+        display( ['debug: attempting detectAndTrack' ] )
         num_frames = length( framepaths );
         for frmidx=1:num_frames
             framepath = strcat( easy_data_dir, '/', framepaths( frmidx ).path );
