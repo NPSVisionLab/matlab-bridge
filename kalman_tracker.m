@@ -72,7 +72,7 @@ function [trackedLocations] = detectAndTrack( inputVideo, videotype )
 
         release(videoReader);
     else % video is represented by multiple images
-        display( ['debug: attempting detectAndTrack on a video composed of multiple images' ] )
+        display( ['debug: attempting detectAndTrack on a video composed of folder of frames' ] )
         num_frames = length( inputVideo );
         for frmidx=1:num_frames
             framepath = inputVideo( frmidx ).path;
@@ -169,7 +169,7 @@ function [] = trackerService( msg_path, matlab_bridge_dir, easy_data_dir )
                 positions = detectAndTrack( videopath, videotype );
             else
                 framepaths = arts.labelable(artidx).vidSub.framepaths;
-                display( ['debug: video is composed of multiple image files'] );
+                display( ['debug: video is composed of multiple image files: ' int2str( length( arts.labelable(artidx).vidSub.framepaths ) ) ] );
                 videotype = 0;
                 positions = detectAndTrackImage( framepaths, videotype );
             end
