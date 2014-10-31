@@ -12,12 +12,13 @@ import easy
 # You need to have the Matlab vision toolbox installed.  The
 # singleball.avi movie is here:
 # YourMatlabProgramPath/toolbox/vision/visiondemos/singleball.avi
-#
+# You should move it to the Easy! data directory for the demo
 
 
 # runset = easy.createRunSet( "singleball.avi")
 
-# Optionally, specify a folder that contains 1-all of the videos frames as images
+# Optionally, specify a folder that contains a sequence of the video's
+# frames as image files
 runset = easy.createRunSet( "singleball.avi", framesFolder="singleball" )
 
 #

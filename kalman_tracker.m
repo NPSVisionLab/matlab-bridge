@@ -179,7 +179,7 @@ function [] = trackerService( msg_path, matlab_bridge_dir, easy_data_dir )
             positions = minus(positions,1);
 
             % insert the positions into the ResultSet as a track
-            resultset = setPositions( in_protobuf_msg, resultset, count, plidx, artidx, positions );
+            resultset = setPositions( in_protobuf_msg, resultset, framepaths, count, plidx, artidx, positions );
             count = count + 1;
         end
     end
@@ -224,16 +224,7 @@ function [pbtrack] = createPbTrack( positions )
     % 
 end
 
-
-% Add the foundLabelable to the list of already found labels for the 
-% given result.
-function [result] = addFoundLabelable( result, foundLabelable )
-    % todo: check that this appends at the end of the list
-    result.foundLabels(end) = pblib_set(result.foundLabels(end), ...
-                                        'labelable', foundLabelable);
-end
-
-function [resultset] = setPositions( in_protobuf_msg, resultset, count, pls, art, positions )
+function [resultset] = setPositions( in_protobuf_msg, resultset, framepaths, count, pls, art, positions )
     resultset.results.rslt(count) = pb_read_Result();
     resultset.results.rslt(count) = pblib_set(resultset.results.rslt(count), 'original', pb_read_Labelable());
     resultset.results.rslt(count).original = pblib_set(resultset.results.rslt(count).original, 'confidence', in_protobuf_msg.run.purposedLists.purlist(pls).labeledArtifacts.labelable(art).confidence);
@@ -251,6 +242,12 @@ function [resultset] = setPositions( in_protobuf_msg, resultset, count, pls, art
     resultset.results.rslt(count).original.vidSub.videopath = pblib_set(resultset.results.rslt(count).original.vidSub.videopath, 'filename', in_protobuf_msg.run.purposedLists.purlist(pls).labeledArtifacts.labelable(art).vidSub.videopath.filename);
     resultset.results.rslt(count).original.vidSub = pblib_set(resultset.results.rslt(count).original.vidSub, 'width', in_protobuf_msg.run.purposedLists.purlist(pls).labeledArtifacts.labelable(art).vidSub.width);
     resultset.results.rslt(count).original.vidSub = pblib_set(resultset.results.rslt(count).original.vidSub, 'height', in_protobuf_msg.run.purposedLists.purlist(pls).labeledArtifacts.labelable(art).vidSub.height);
+    
+    resultset.results.rslt(count).original.vidSub = pblib_set(resultset.results.rslt(count).original.vidSub, 'framepaths', pb_read_FramePathPair());
+    for frmidx=1:length( framepaths )
+        resultset.results.rslt(count).original.vidSub.framepaths(frmidx) = pb_read_FramePathPair();
+        resultset.results.rslt(count).original.vidSub.framepaths(frmidx) = pblib_set(resultset.results.rslt(count).original.vidSub.framepaths(frmidx),'path', framepaths( frmidx ).path );
+    end
 
     resultset.results.rslt(count) = pblib_set(resultset.results.rslt(count), 'foundLabels', pb_read_LabelableList());
     resultset.results.rslt(count).foundLabels = pblib_set(resultset.results.rslt(count).foundLabels, 'labeledTrack', pb_read_LabeledTrack());
