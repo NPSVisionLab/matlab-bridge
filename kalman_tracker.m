@@ -21,7 +21,7 @@ end
 
 % the actual tracking function; makes lots of assumptions on the scene
 % and motion
-function [trackedLocations] = detectAndTrack( inputVideo, videotype )
+function [trackedLocations] = detectAndTrack( inputVideoPath, framepaths, videotype, easy_data_dir )
     trackedLocations = [];
     foregroundDetector = vision.ForegroundDetector('NumTrainingFrames', 10, 'InitialVariance', 0.05);
     blobAnalyzer = vision.BlobAnalysis('AreaOutputPort', false, 'MinimumBlobArea', 70);
@@ -30,12 +30,12 @@ function [trackedLocations] = detectAndTrack( inputVideo, videotype )
     
     % The method of stepping through the video depends on videotype
     if ( videotype == 1 ) % single video file
-        display( ['debug: attempting detectAndTrack on file ' inputVideo] )
+        display( ['debug: attempting detectAndTrack on file ' inputVideoPath] )
         try
-            videoReader = vision.VideoFileReader(inputVideo);
+            videoReader = vision.VideoFileReader(inputVideoPath);
         catch err
             if (strcmp(err.identifier,'dspshared:dspmmfileinfo:unavailableFile'))
-                display( ['warn: file not found, skipping: ' inputVideo] )
+                display( ['warn: file not found, skipping: ' inputVideoPath] )
                 return;
             else
                 rethrow(err);
@@ -72,10 +72,10 @@ function [trackedLocations] = detectAndTrack( inputVideo, videotype )
 
         release(videoReader);
     else % video is represented by multiple images
-        display( ['debug: attempting detectAndTrack on a video composed of folder of frames' ] )
-        num_frames = length( inputVideo );
+        display( ['debug: attempting detectAndTrack on a video composed of a folder of frames' ] )
+        num_frames = length( framepaths );
         for frmidx=1:num_frames
-            framepath = inputVideo( frmidx ).path;
+            framepath = strcat( easy_data_dir, '/', framepaths( frmidx ).path );
             colorImage  = imread( framepath );
             fcnt = fcnt+1;
             trackedLocations = [trackedLocations; NaN NaN]; %#ok<AGROW>
@@ -157,23 +157,20 @@ function [] = trackerService( msg_path, matlab_bridge_dir, easy_data_dir )
             % (frames)
             if ( isempty( arts.labelable(artidx).vidSub.framepaths ) && isempty( arts.labelable(artidx).vidSub.videopath ) )
                 display( ['debug: video substrate is empty'] );
-            elseif ( ~isempty( arts.labelable(artidx).vidSub.framepaths ) && ~isempty( arts.labelable(artidx).vidSub.videopath ) )
-                display( ['debug: video ROI specified. this is not handled yet'] );
             elseif ( isempty( arts.labelable(artidx).vidSub.framepaths ) )
                 % relative_path is relative to Easy data directory
-                videopath = fullfile( easy_data_dir, ...
-                                 arts.labelable(artidx).vidSub.videopath.directory.relativePath, ...
-                                 arts.labelable(artidx).vidSub.videopath.filename );
                 display( ['debug: video is a single video file'] );
                 videotype = 1;
-                positions = detectAndTrack( videopath, videotype );
             else
-                framepaths = arts.labelable(artidx).vidSub.framepaths;
                 display( ['debug: video is composed of multiple image files: ' int2str( length( arts.labelable(artidx).vidSub.framepaths ) ) ] );
                 videotype = 0;
-                positions = detectAndTrackImage( framepaths, videotype );
             end
-            
+            videopath = fullfile( easy_data_dir, ...
+                                 arts.labelable(artidx).vidSub.videopath.directory.relativePath, ...
+                                 arts.labelable(artidx).vidSub.videopath.filename );
+            framepaths = arts.labelable(artidx).vidSub.framepaths;
+            positions = detectAndTrack( videopath, framepaths, videotype, easy_data_dir );
+                
             %display( ['warn: FAKING processing of artifact ' filepath] );
             %positions = [25 49; 35 59; 32 63];
             

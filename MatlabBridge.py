@@ -67,9 +67,10 @@ def to_protobuf ( run, props, model=None ):
                 msg.run.purposedLists.purlist[plidx].labeledArtifacts.labelable[laidx].vidSub.videopath.directory.relativePath = lb.sub.videopath.directory.relativePath
                 msg.run.purposedLists.purlist[plidx].labeledArtifacts.labelable[laidx].vidSub.videopath.filename = lb.sub.videopath.filename
                 cnt = 0;
-                for key, value in zip( lb.sub.framepaths.keys(), lb.sub.framepaths.values() ):
-                    msg.run.purposedLists.purlist[plidx].labeledArtifacts.labelable[laidx].vidSub.framepaths[ cnt ].frameNum = key
-                    msg.run.purposedLists.purlist[plidx].labeledArtifacts.labelable[laidx].vidSub.framepaths[ cnt ].path = value
+                for k, val in zip( lb.sub.framepaths.keys(), lb.sub.framepaths.values() ):
+                    msg.run.purposedLists.purlist[plidx].labeledArtifacts.labelable[laidx].vidSub.framepaths.add()
+                    msg.run.purposedLists.purlist[plidx].labeledArtifacts.labelable[laidx].vidSub.framepaths[ cnt ].frameNum = k
+                    msg.run.purposedLists.purlist[plidx].labeledArtifacts.labelable[laidx].vidSub.framepaths[ cnt ].path = val.directory.relativePath + '/' + val.filename
                     cnt = cnt + 1
             if( type( lb.sub ) == cvac.ImageSubstrate ):
                 msg.run.purposedLists.purlist[plidx].labeledArtifacts.labelable[laidx].imgSub.width = lb.sub.width
