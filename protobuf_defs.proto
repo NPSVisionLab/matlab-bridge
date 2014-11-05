@@ -59,8 +59,8 @@ message FilePath {
 //    FilePath path;
 //  };
 message ImageSubstrate {
-    optional int32 width = 1 [default = 0];
-    optional int32 height = 2 [default = 0];
+    optional int64 width = 1 [default = 0];
+    optional int64 height = 2 [default = 0];
     optional FilePath path = 3;
 
 }
@@ -71,8 +71,8 @@ message ImageSubstrate {
 //    FramePaths framepaths;
 //  };
 message VideoSubstrate {
-    optional int32 width = 1 [default = 0];
-    optional int32 height = 2 [default = 0];
+    optional int64 width = 1 [default = 0];
+    optional int64 height = 2 [default = 0];
     optional FilePath videopath = 3;
     repeated FramePathPair framepaths = 4;
 }
@@ -177,8 +177,8 @@ message VideoSeekTime {
 //    int y;
 //  };
 message Point2D {
-    optional int32 x = 1;
-    optional int32 y = 2;
+    optional int64 x = 1;
+    optional int64 y = 2;
 }
 
 //class PreciseLocation extends Location {
@@ -210,7 +210,7 @@ message Purpose {
     }
 
     optional PurposeType ptype = 1 [default = UNPURPOSED];
-    optional int32 classID = 2 [default = 0];
+    optional int64 classID = 2 [default = 0];
 }
 
 //class PurposedList {
