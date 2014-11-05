@@ -10,8 +10,8 @@ function [video_substrate] = pb_read_VideoSubstrate(buffer, buffer_start, buffer
 %                    defaults to length(buffer)
 %
 %   MEMBERS:
-%     width          : optional int32, defaults to int32(0).
-%     height         : optional int32, defaults to int32(0).
+%     width          : optional int64, defaults to int64(0).
+%     height         : optional int64, defaults to int64(0).
 %     videopath      : optional <a href="matlab:help pb_read_FilePath">FilePath</a>, defaults to struct([]).
 %     framepaths     : repeated <a href="matlab:help pb_read_FramePathPair">FramePathPair</a>, defaults to struct([]).
 %
