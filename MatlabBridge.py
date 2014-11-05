@@ -163,9 +163,10 @@ def to_CVAC_ResultSet( protobuf_matlab_bridge_msg ):
             track = []
             for fidx, frm in enumerate(protobuf_matlab_bridge_msg.res.results.rslt[ridx].foundLabels.labeledTrack[0].keyframesLocations.framelocation):
                 vst = cvac.VideoSeekTime(time=frm.frame.time, framecnt=frm.frame.framecnt)
-                if frm.loc:
+                # '-1' is used to flag locations that are not of a particular type
+                if frm.loc.x != -1 and frm.loc.y != -1:
                     pt2d = cvac.Point2D(x=frm.loc.x,y=frm.loc.y)
-                elif frm.locPrecise:
+                elif frm.locPrecise.x != -1 and frm.locPrecise.y != -1:
                     pt2d = cvac.PreciseLocation(centerX=frm.locPrecise.x, centerY=frm.locPrecise.y)
                 else:
                     print "error: unsupported location type"

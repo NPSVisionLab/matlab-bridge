@@ -171,12 +171,14 @@ function [] = trackerService( msg_path, matlab_bridge_dir, easy_data_dir )
             framepaths = arts.labelable(artidx).vidSub.framepaths;
             positions = detectAndTrack( videopath, framepaths, videotype, easy_data_dir );
                 
-            %display( ['warn: FAKING processing of artifact ' filepath] );
-            %positions = [25 49; 35 59; 32 63];
+            %display( ['warn: FAKING processing of artifact ' videopath] );
+            %positions = [25.1 49.3; 35 59; 32.3 63.5];
             
             % change from Matlab one-based coordinate system to
             % EasyCV zero-based coordinates.
-            positions = minus(positions,1);
+            % int32 conversion is required for pixel tracking. subpixel
+            % tracking does not require conversion
+            positions = int32(minus(positions,1));
 
             % insert the positions into the ResultSet as a track
             resultset = setPositions( in_protobuf_msg, resultset, framepaths, count, plidx, artidx, positions );
@@ -201,27 +203,6 @@ function [] = trackerService( msg_path, matlab_bridge_dir, easy_data_dir )
         fclose(touch);
     end
 
-end
-
-    
-% create an EasyCV LabeledTrack in protobuf format from a matrix of locations
-function [pbtrack] = createPbTrack( positions )
-    pbtrack = pb_read_Labelable();
-    pbtrack = pblib_set(pbtrack, 'labelable', pb_read_Labelable());
-    pbtrack.labelable = pblib_set(pbtrack.labelable, 'confidence', 1.0);
-    pbtrack.labelable = pblib_set(pbtrack.labelable, 'lab', pb_read_Label());
-    pbtrack.labelable.lab = pblib_set(pbtrack.labelable.lab, 'hasLabel', true);
-    pbtrack.labelable.lab = pblib_set(pbtrack.labelable.lab, 'name', 'b-track');
-
-    % TODO create the LabeledTrack:
-    % FrameLocationList keyframesLocations;
-    % Interpolation interp = DISCRETE;
-    %
-    % FrameLocation {VideoSeekTime frame; Location loc = from positions;
-    % bool occluded = false; bool outOfFrame = false; }
-    % 
-    % VideoSeekTime { long time=-1; long framecnt = index into positions }
-    % 
 end
 
 function [resultset] = setPositions( in_protobuf_msg, resultset, framepaths, count, pls, art, positions )
@@ -279,9 +260,27 @@ function [resultset] = setPositions( in_protobuf_msg, resultset, framepaths, cou
         resultset.results.rslt(count).foundLabels.labeledTrack.keyframesLocations.framelocation(f).frame = pblib_set(resultset.results.rslt(count).foundLabels.labeledTrack.keyframesLocations.framelocation(f).frame, 'framecnt', f);
         
         %%This is where you might fill in the result of your detection %%%
-        resultset.results.rslt(count).foundLabels.labeledTrack.keyframesLocations.framelocation(f) = pblib_set(resultset.results.rslt(count).foundLabels.labeledTrack.keyframesLocations.framelocation(f), 'loc', pb_read_Point2D());
-        resultset.results.rslt(count).foundLabels.labeledTrack.keyframesLocations.framelocation(f).loc = pblib_set(resultset.results.rslt(count).foundLabels.labeledTrack.keyframesLocations.framelocation(f).loc, 'x', positions(f,1));
-        resultset.results.rslt(count).foundLabels.labeledTrack.keyframesLocations.framelocation(f).loc = pblib_set(resultset.results.rslt(count).foundLabels.labeledTrack.keyframesLocations.framelocation(f).loc, 'y', positions(f,2));
+        if( isa( positions(f,1), 'integer' ) ) % pixel-level tracking
+            resultset.results.rslt(count).foundLabels.labeledTrack.keyframesLocations.framelocation(f) = pblib_set(resultset.results.rslt(count).foundLabels.labeledTrack.keyframesLocations.framelocation(f), 'loc', pb_read_Point2D());
+            resultset.results.rslt(count).foundLabels.labeledTrack.keyframesLocations.framelocation(f).loc = pblib_set(resultset.results.rslt(count).foundLabels.labeledTrack.keyframesLocations.framelocation(f).loc, 'x', positions(f,1));
+            resultset.results.rslt(count).foundLabels.labeledTrack.keyframesLocations.framelocation(f).loc = pblib_set(resultset.results.rslt(count).foundLabels.labeledTrack.keyframesLocations.framelocation(f).loc, 'y', positions(f,2));
+            % it's necessary to set the precise locations to -1, otherwise
+            % they will be set to 0 automatically by the protobuf 
+            % converter. the MatlabBridge.py needs to know whether a 
+            % precise location or not was intended. -1 is used as the flag.
+            resultset.results.rslt(count).foundLabels.labeledTrack.keyframesLocations.framelocation(f) = pblib_set(resultset.results.rslt(count).foundLabels.labeledTrack.keyframesLocations.framelocation(f), 'locPrecise', pb_read_PreciseLocation());
+            resultset.results.rslt(count).foundLabels.labeledTrack.keyframesLocations.framelocation(f).locPrecise = pblib_set(resultset.results.rslt(count).foundLabels.labeledTrack.keyframesLocations.framelocation(f).locPrecise, 'x', -1);
+            resultset.results.rslt(count).foundLabels.labeledTrack.keyframesLocations.framelocation(f).locPrecise = pblib_set(resultset.results.rslt(count).foundLabels.labeledTrack.keyframesLocations.framelocation(f).locPrecise, 'y', -1);
+        elseif ( isa( positions(f,1), 'double' ) ) % subpixel-level tracking
+            resultset.results.rslt(count).foundLabels.labeledTrack.keyframesLocations.framelocation(f) = pblib_set(resultset.results.rslt(count).foundLabels.labeledTrack.keyframesLocations.framelocation(f), 'locPrecise', pb_read_PreciseLocation());
+            resultset.results.rslt(count).foundLabels.labeledTrack.keyframesLocations.framelocation(f).locPrecise = pblib_set(resultset.results.rslt(count).foundLabels.labeledTrack.keyframesLocations.framelocation(f).locPrecise, 'x', positions(f,1));
+            resultset.results.rslt(count).foundLabels.labeledTrack.keyframesLocations.framelocation(f).locPrecise = pblib_set(resultset.results.rslt(count).foundLabels.labeledTrack.keyframesLocations.framelocation(f).locPrecise, 'y', positions(f,2));
+            resultset.results.rslt(count).foundLabels.labeledTrack.keyframesLocations.framelocation(f) = pblib_set(resultset.results.rslt(count).foundLabels.labeledTrack.keyframesLocations.framelocation(f), 'loc', pb_read_Point2D());
+            resultset.results.rslt(count).foundLabels.labeledTrack.keyframesLocations.framelocation(f).loc = pblib_set(resultset.results.rslt(count).foundLabels.labeledTrack.keyframesLocations.framelocation(f).loc, 'x', int32(-1));
+            resultset.results.rslt(count).foundLabels.labeledTrack.keyframesLocations.framelocation(f).loc = pblib_set(resultset.results.rslt(count).foundLabels.labeledTrack.keyframesLocations.framelocation(f).loc, 'y', int32(-1));
+        else
+            error('A position computed by the tracker was not an integer or double. It should be.')
+        end
         
         resultset.results.rslt(count).foundLabels.labeledTrack.keyframesLocations.framelocation(f) = pblib_set(resultset.results.rslt(count).foundLabels.labeledTrack.keyframesLocations.framelocation(f), 'occluded', false);
         resultset.results.rslt(count).foundLabels.labeledTrack.keyframesLocations.framelocation(f) = pblib_set(resultset.results.rslt(count).foundLabels.labeledTrack.keyframesLocations.framelocation(f), 'outOfFrame', false);
