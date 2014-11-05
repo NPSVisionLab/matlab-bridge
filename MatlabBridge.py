@@ -167,7 +167,7 @@ def to_CVAC_ResultSet( protobuf_matlab_bridge_msg ):
                 if frm.loc.x != -1 and frm.loc.y != -1:
                     pt2d = cvac.Point2D(x=frm.loc.x,y=frm.loc.y)
                 elif frm.locPrecise.x != -1 and frm.locPrecise.y != -1:
-                    pt2d = cvac.PreciseLocation(centerX=frm.locPrecise.x, centerY=frm.locPrecise.y)
+                    pt2d = cvac.PreciseLocation(centerX=round(frm.locPrecise.x,1), centerY=round(frm.locPrecise.y,1))
                 else:
                     print "error: unsupported location type"
                 frmLoc = cvac.FrameLocation( frame=vst, loc=pt2d, occluded=frm.occluded,outOfFrame=frm.outOfFrame )
