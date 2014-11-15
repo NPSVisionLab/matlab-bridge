@@ -13,13 +13,13 @@ import easy
 # singleball.avi movie is here:
 # YourMatlabProgramPath/toolbox/vision/visiondemos/singleball.avi
 # You should move it to the Easy! data directory for the demo
+#
 
-
-# runset = easy.createRunSet( "singleball.avi")
+runset = easy.createRunSet( "singleball.avi" )
 
 # Optionally, specify a folder that contains a sequence of the video's
 # frames as image files
-runset = easy.createRunSet( "singleball.avi", framesFolder="singleball" )
+# runset = easy.createRunSet( "singleball.avi_frames" )
 
 #
 # evaluate your tracking algorithm with a common match scoring method
@@ -27,3 +27,4 @@ runset = easy.createRunSet( "singleball.avi", framesFolder="singleball" )
 tracker = easy.getDetector( "KalmanTracker:default -p 20133" )
 results = easy.detect( tracker, None, runset )
 easy.printResults( results )
+easy.printLabeledTrack( results )
