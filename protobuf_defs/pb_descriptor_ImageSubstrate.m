@@ -3,7 +3,7 @@ function [descriptor] = pb_descriptor_ImageSubstrate()
 %   function [descriptor] = pb_descriptor_ImageSubstrate()
 %
 %   See also pb_read_ImageSubstrate
-
+  
   descriptor = struct( ...
     'name', 'ImageSubstrate', ...
     'full_name', 'ImageSubstrate', ...
@@ -62,9 +62,9 @@ function [descriptor] = pb_descriptor_ImageSubstrate()
     'options', [ ... % Not Implemented
     ] ...
   );
-
+  
   descriptor.field_indeces_by_number = java.util.HashMap;
   put(descriptor.field_indeces_by_number, uint32(1), 1);
   put(descriptor.field_indeces_by_number, uint32(2), 2);
   put(descriptor.field_indeces_by_number, uint32(3), 3);
-
+  

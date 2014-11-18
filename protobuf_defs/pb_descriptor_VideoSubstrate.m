@@ -3,7 +3,7 @@ function [descriptor] = pb_descriptor_VideoSubstrate()
 %   function [descriptor] = pb_descriptor_VideoSubstrate()
 %
 %   See also pb_read_VideoSubstrate
-
+  
   descriptor = struct( ...
     'name', 'VideoSubstrate', ...
     'full_name', 'VideoSubstrate', ...
@@ -76,10 +76,10 @@ function [descriptor] = pb_descriptor_VideoSubstrate()
     'options', [ ... % Not Implemented
     ] ...
   );
-
+  
   descriptor.field_indeces_by_number = java.util.HashMap;
   put(descriptor.field_indeces_by_number, uint32(1), 1);
   put(descriptor.field_indeces_by_number, uint32(2), 2);
   put(descriptor.field_indeces_by_number, uint32(3), 3);
   put(descriptor.field_indeces_by_number, uint32(4), 4);
-
+  

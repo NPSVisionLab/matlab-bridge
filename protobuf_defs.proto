@@ -65,10 +65,10 @@ message ImageSubstrate {
 
 }
 
-//dictionary<int, FilePath> FramePaths;
+//dictionary<int, FilePath> FramePath;
 //  class VideoSubstrate extends Substrate {
 //    FilePath videopath;
-//    FramePaths framepaths;
+//    FramePath framepaths;
 //  };
 message VideoSubstrate {
     optional int64 width = 1 [default = 0];
@@ -82,7 +82,7 @@ message VideoSubstrate {
 // as a sequence of frames
 message FramePathPair {
     optional int64 frameNum = 1;
-    optional string path = 2;
+    optional FilePath framepath = 2;
 }
 
 //struct Semantics {
