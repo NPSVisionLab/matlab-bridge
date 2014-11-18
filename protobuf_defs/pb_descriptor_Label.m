@@ -3,7 +3,7 @@ function [descriptor] = pb_descriptor_Label()
 %   function [descriptor] = pb_descriptor_Label()
 %
 %   See also pb_read_Label
-
+  
   descriptor = struct( ...
     'name', 'Label', ...
     'full_name', 'Label', ...
@@ -76,10 +76,10 @@ function [descriptor] = pb_descriptor_Label()
     'options', [ ... % Not Implemented
     ] ...
   );
-
+  
   descriptor.field_indeces_by_number = java.util.HashMap;
   put(descriptor.field_indeces_by_number, uint32(1), 1);
   put(descriptor.field_indeces_by_number, uint32(2), 2);
   put(descriptor.field_indeces_by_number, uint32(3), 3);
   put(descriptor.field_indeces_by_number, uint32(4), 4);
-
+  

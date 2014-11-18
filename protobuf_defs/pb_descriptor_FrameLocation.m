@@ -3,7 +3,7 @@ function [descriptor] = pb_descriptor_FrameLocation()
 %   function [descriptor] = pb_descriptor_FrameLocation()
 %
 %   See also pb_read_FrameLocation
-
+  
   descriptor = struct( ...
     'name', 'FrameLocation', ...
     'full_name', 'FrameLocation', ...
@@ -90,11 +90,11 @@ function [descriptor] = pb_descriptor_FrameLocation()
     'options', [ ... % Not Implemented
     ] ...
   );
-
+  
   descriptor.field_indeces_by_number = java.util.HashMap;
   put(descriptor.field_indeces_by_number, uint32(1), 1);
   put(descriptor.field_indeces_by_number, uint32(2), 2);
   put(descriptor.field_indeces_by_number, uint32(3), 3);
   put(descriptor.field_indeces_by_number, uint32(4), 4);
   put(descriptor.field_indeces_by_number, uint32(5), 5);
-
+  

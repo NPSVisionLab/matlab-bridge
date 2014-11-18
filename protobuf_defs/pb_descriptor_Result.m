@@ -3,7 +3,7 @@ function [descriptor] = pb_descriptor_Result()
 %   function [descriptor] = pb_descriptor_Result()
 %
 %   See also pb_read_Result
-
+  
   descriptor = struct( ...
     'name', 'Result', ...
     'full_name', 'Result', ...
@@ -48,8 +48,8 @@ function [descriptor] = pb_descriptor_Result()
     'options', [ ... % Not Implemented
     ] ...
   );
-
+  
   descriptor.field_indeces_by_number = java.util.HashMap;
   put(descriptor.field_indeces_by_number, uint32(1), 1);
   put(descriptor.field_indeces_by_number, uint32(2), 2);
-
+  

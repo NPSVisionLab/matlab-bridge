@@ -3,7 +3,7 @@ function [descriptor] = pb_descriptor_RunSet()
 %   function [descriptor] = pb_descriptor_RunSet()
 %
 %   See also pb_read_RunSet
-
+  
   descriptor = struct( ...
     'name', 'RunSet', ...
     'full_name', 'RunSet', ...
@@ -34,7 +34,7 @@ function [descriptor] = pb_descriptor_RunSet()
     'options', [ ... % Not Implemented
     ] ...
   );
-
+  
   descriptor.field_indeces_by_number = java.util.HashMap;
   put(descriptor.field_indeces_by_number, uint32(1), 1);
-
+  

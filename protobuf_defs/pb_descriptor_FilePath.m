@@ -3,7 +3,7 @@ function [descriptor] = pb_descriptor_FilePath()
 %   function [descriptor] = pb_descriptor_FilePath()
 %
 %   See also pb_read_FilePath
-
+  
   descriptor = struct( ...
     'name', 'FilePath', ...
     'full_name', 'FilePath', ...
@@ -48,8 +48,8 @@ function [descriptor] = pb_descriptor_FilePath()
     'options', [ ... % Not Implemented
     ] ...
   );
-
+  
   descriptor.field_indeces_by_number = java.util.HashMap;
   put(descriptor.field_indeces_by_number, uint32(1), 1);
   put(descriptor.field_indeces_by_number, uint32(2), 2);
-
+  

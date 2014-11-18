@@ -3,7 +3,7 @@ function [descriptor] = pb_descriptor_ResultSet()
 %   function [descriptor] = pb_descriptor_ResultSet()
 %
 %   See also pb_read_ResultSet
-
+  
   descriptor = struct( ...
     'name', 'ResultSet', ...
     'full_name', 'ResultSet', ...
@@ -34,7 +34,7 @@ function [descriptor] = pb_descriptor_ResultSet()
     'options', [ ... % Not Implemented
     ] ...
   );
-
+  
   descriptor.field_indeces_by_number = java.util.HashMap;
   put(descriptor.field_indeces_by_number, uint32(1), 1);
-
+  

@@ -3,7 +3,7 @@ function [descriptor] = pb_descriptor_Semantics()
 %   function [descriptor] = pb_descriptor_Semantics()
 %
 %   See also pb_read_Semantics
-
+  
   descriptor = struct( ...
     'name', 'Semantics', ...
     'full_name', 'Semantics', ...
@@ -34,7 +34,7 @@ function [descriptor] = pb_descriptor_Semantics()
     'options', [ ... % Not Implemented
     ] ...
   );
-
+  
   descriptor.field_indeces_by_number = java.util.HashMap;
   put(descriptor.field_indeces_by_number, uint32(1), 1);
-
+  

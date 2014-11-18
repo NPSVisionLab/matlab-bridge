@@ -3,7 +3,7 @@ function [descriptor] = pb_descriptor_FrameLocationList()
 %   function [descriptor] = pb_descriptor_FrameLocationList()
 %
 %   See also pb_read_FrameLocationList
-
+  
   descriptor = struct( ...
     'name', 'FrameLocationList', ...
     'full_name', 'FrameLocationList', ...
@@ -34,7 +34,7 @@ function [descriptor] = pb_descriptor_FrameLocationList()
     'options', [ ... % Not Implemented
     ] ...
   );
-
+  
   descriptor.field_indeces_by_number = java.util.HashMap;
   put(descriptor.field_indeces_by_number, uint32(1), 1);
-
+  

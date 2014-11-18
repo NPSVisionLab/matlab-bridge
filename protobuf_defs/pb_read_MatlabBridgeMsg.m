@@ -16,7 +16,7 @@ function [matlab_bridge_msg] = pb_read_MatlabBridgeMsg(buffer, buffer_start, buf
 %     model          : optional <a href="matlab:help pb_read_Model">Model</a>, defaults to struct([]).
 %
 %   See also pb_read_RunSet, pb_read_Properties, pb_read_ResultSet, pb_read_Model, pb_read_Result, pb_read_ResultList, pb_read_DirectoryPath, pb_read_FilePath, pb_read_ImageSubstrate, pb_read_VideoSubstrate, pb_read_FramePathPair, pb_read_Semantics, pb_read_LabelProperties, pb_read_Label, pb_read_Labelable, pb_read_LabeledTrack, pb_read_FrameLocationList, pb_read_FrameLocation, pb_read_VideoSeekTime, pb_read_Point2D, pb_read_PreciseLocation, pb_read_LabelableList, pb_read_Purpose, pb_read_PurposedLabelableSeq, pb_read_PurposedListSequence.
-
+  
   if (nargin < 1)
     buffer = uint8([]);
   end
@@ -26,7 +26,7 @@ function [matlab_bridge_msg] = pb_read_MatlabBridgeMsg(buffer, buffer_start, buf
   if (nargin < 3)
     buffer_end = length(buffer);
   end
-
+  
   descriptor = pb_descriptor_MatlabBridgeMsg();
   matlab_bridge_msg = pblib_generic_parse_from_string(buffer, descriptor, buffer_start, buffer_end);
   matlab_bridge_msg.descriptor_function = @pb_descriptor_MatlabBridgeMsg;

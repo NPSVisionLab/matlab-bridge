@@ -3,7 +3,7 @@ function [descriptor] = pb_descriptor_Purpose()
 %   function [descriptor] = pb_descriptor_Purpose()
 %
 %   See also pb_read_Purpose
-
+  
   descriptor = struct( ...
     'name', 'Purpose', ...
     'full_name', 'Purpose', ...
@@ -48,8 +48,8 @@ function [descriptor] = pb_descriptor_Purpose()
     'options', [ ... % Not Implemented
     ] ...
   );
-
+  
   descriptor.field_indeces_by_number = java.util.HashMap;
   put(descriptor.field_indeces_by_number, uint32(1), 1);
   put(descriptor.field_indeces_by_number, uint32(2), 2);
-
+  

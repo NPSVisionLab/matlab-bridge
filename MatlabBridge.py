@@ -68,9 +68,19 @@ def to_protobuf ( run, props, model=None ):
                 msg.run.purposedLists.purlist[plidx].labeledArtifacts.labelable[laidx].vidSub.videopath.filename = lb.sub.videopath.filename
                 cnt = 0;
                 for k, val in zip( lb.sub.framepaths.keys(), lb.sub.framepaths.values() ):
-                    msg.run.purposedLists.purlist[plidx].labeledArtifacts.labelable[laidx].vidSub.framepaths.add()
-                    msg.run.purposedLists.purlist[plidx].labeledArtifacts.labelable[laidx].vidSub.framepaths[ cnt ].frameNum = k
-                    msg.run.purposedLists.purlist[plidx].labeledArtifacts.labelable[laidx].vidSub.framepaths[ cnt ].path = val.directory.relativePath + '/' + val.filename
+                    msg.run.purposedLists.purlist[plidx].labeledArtifacts.labelable[laidx] \
+                        .vidSub.framepaths.add()
+                    msg.run.purposedLists.purlist[plidx].labeledArtifacts.labelable[laidx] \
+                        .vidSub.framepaths[ cnt ].frameNum = k
+                    #fpath = cvac.FilePath( directory = cvac.DirectoryPath(
+                    #    relativePath = val.directory.relativePath ), filename = val.filename )
+                    #msg.run.purposedLists.purlist[plidx].labeledArtifacts.labelable[laidx] \
+                    #    .vidSub.framepaths[ cnt ].framepath = fpath
+                    msg.run.purposedLists.purlist[plidx].labeledArtifacts.labelable[laidx] \
+                        .vidSub.framepaths[ cnt ].framepath.directory.relativePath = \
+                        val.directory.relativePath
+                    msg.run.purposedLists.purlist[plidx].labeledArtifacts.labelable[laidx] \
+                        .vidSub.framepaths[ cnt ].framepath.filename = val.filename
                     cnt = cnt + 1
             if( type( lb.sub ) == cvac.ImageSubstrate ):
                 msg.run.purposedLists.purlist[plidx].labeledArtifacts.labelable[laidx].imgSub.width = lb.sub.width

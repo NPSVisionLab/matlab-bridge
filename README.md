@@ -35,3 +35,26 @@ training_sample.m
 detection_sample.m
 
 
+## Installation
+
+This project ties in with [EasyCV](http://npsvisionlab.github.io/CVAC/).
+Just clone this repository into EasyCV/algorithms/matlab-bridge and
+create a file EasyCV/algorithms/UserCMakeLists.txt
+with the following contents:
+
+```
+IF (BUILD_WITH_MATLABBRIDGE)
+  ADD_SUBDIRECTORY(matlab-bridge)
+ENDIF ()
+```
+
+### if you want to rebuild the protobuffer files (this is not necessary)
+
+Follow the instructions for
+[building the protobuf-matlab compiler](https://code.google.com/p/protobuf-matlab/source/browse/README.txt),
+but add the following include directives into
+protobuf/src/google/protobuf/message.cc before building:
+```C++
+#include <string>
+#include <iostream>
+```

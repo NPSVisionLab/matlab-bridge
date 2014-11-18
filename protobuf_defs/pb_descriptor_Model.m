@@ -3,7 +3,7 @@ function [descriptor] = pb_descriptor_Model()
 %   function [descriptor] = pb_descriptor_Model()
 %
 %   See also pb_read_Model
-
+  
   descriptor = struct( ...
     'name', 'Model', ...
     'full_name', 'Model', ...
@@ -34,7 +34,7 @@ function [descriptor] = pb_descriptor_Model()
     'options', [ ... % Not Implemented
     ] ...
   );
-
+  
   descriptor.field_indeces_by_number = java.util.HashMap;
   put(descriptor.field_indeces_by_number, uint32(1), 1);
-
+  

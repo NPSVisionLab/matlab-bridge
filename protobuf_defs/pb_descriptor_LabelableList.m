@@ -3,7 +3,7 @@ function [descriptor] = pb_descriptor_LabelableList()
 %   function [descriptor] = pb_descriptor_LabelableList()
 %
 %   See also pb_read_LabelableList
-
+  
   descriptor = struct( ...
     'name', 'LabelableList', ...
     'full_name', 'LabelableList', ...
@@ -48,8 +48,8 @@ function [descriptor] = pb_descriptor_LabelableList()
     'options', [ ... % Not Implemented
     ] ...
   );
-
+  
   descriptor.field_indeces_by_number = java.util.HashMap;
   put(descriptor.field_indeces_by_number, uint32(1), 1);
   put(descriptor.field_indeces_by_number, uint32(2), 2);
-
+  

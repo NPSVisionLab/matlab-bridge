@@ -3,7 +3,7 @@ function [descriptor] = pb_descriptor_PreciseLocation()
 %   function [descriptor] = pb_descriptor_PreciseLocation()
 %
 %   See also pb_read_PreciseLocation
-
+  
   descriptor = struct( ...
     'name', 'PreciseLocation', ...
     'full_name', 'PreciseLocation', ...
@@ -48,8 +48,8 @@ function [descriptor] = pb_descriptor_PreciseLocation()
     'options', [ ... % Not Implemented
     ] ...
   );
-
+  
   descriptor.field_indeces_by_number = java.util.HashMap;
   put(descriptor.field_indeces_by_number, uint32(1), 1);
   put(descriptor.field_indeces_by_number, uint32(2), 2);
-
+  

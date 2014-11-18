@@ -3,7 +3,7 @@ function [descriptor] = pb_descriptor_Point2D()
 %   function [descriptor] = pb_descriptor_Point2D()
 %
 %   See also pb_read_Point2D
-
+  
   descriptor = struct( ...
     'name', 'Point2D', ...
     'full_name', 'Point2D', ...
@@ -48,8 +48,8 @@ function [descriptor] = pb_descriptor_Point2D()
     'options', [ ... % Not Implemented
     ] ...
   );
-
+  
   descriptor.field_indeces_by_number = java.util.HashMap;
   put(descriptor.field_indeces_by_number, uint32(1), 1);
   put(descriptor.field_indeces_by_number, uint32(2), 2);
-
+  

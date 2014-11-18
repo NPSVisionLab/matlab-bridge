@@ -3,7 +3,7 @@ function [descriptor] = pb_descriptor_VideoSeekTime()
 %   function [descriptor] = pb_descriptor_VideoSeekTime()
 %
 %   See also pb_read_VideoSeekTime
-
+  
   descriptor = struct( ...
     'name', 'VideoSeekTime', ...
     'full_name', 'VideoSeekTime', ...
@@ -48,8 +48,8 @@ function [descriptor] = pb_descriptor_VideoSeekTime()
     'options', [ ... % Not Implemented
     ] ...
   );
-
+  
   descriptor.field_indeces_by_number = java.util.HashMap;
   put(descriptor.field_indeces_by_number, uint32(1), 1);
   put(descriptor.field_indeces_by_number, uint32(2), 2);
-
+  
