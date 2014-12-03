@@ -130,6 +130,7 @@ def to_CVAC_ResultSet( protobuf_matlab_bridge_msg ):
     for ridx, rslt in enumerate( protobuf_matlab_bridge_msg.res.results.rslt ):
         # set original label for each result
         if( protobuf_matlab_bridge_msg.res.results.rslt[ridx].original.vidSub ): # VideoSubstrate
+            # todo: copy the framepaths
             opath = cvac.FilePath( directory = cvac.DirectoryPath( relativePath = protobuf_matlab_bridge_msg.res.results.rslt[ridx].original.vidSub.videopath.directory.relativePath ), filename = protobuf_matlab_bridge_msg.res.results.rslt[ridx].original.vidSub.videopath.filename )
             osub = cvac.VideoSubstrate( videopath = opath, width = protobuf_matlab_bridge_msg.res.results.rslt[ridx].original.vidSub.width, height = protobuf_matlab_bridge_msg.res.results.rslt[ridx].original.vidSub.height )
         elif( protobuf_matlab_bridge_msg.res.results.rslt[ridx].original.imgSub ): # ImageSubstrate
