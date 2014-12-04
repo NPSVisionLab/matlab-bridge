@@ -8,6 +8,12 @@ SET( MATLAB_BRIDGE_PY_SOURCE_FILES
   ${CMAKE_CURRENT_SOURCE_DIR}/MatlabBridge.py 
   ${CMAKE_CURRENT_SOURCE_DIR}/__init__.py )
 
+SET( MATLAB_BRIDGE_M_SOURCE_FILES
+  ${CMAKE_CURRENT_SOURCE_DIR}/kalman_tracker.m 
+  ${CMAKE_CURRENT_SOURCE_DIR}/detection_sample.m 
+  ${CMAKE_CURRENT_SOURCE_DIR}/training_sample.m 
+  )
+
 OPTION(COMPILE_PROTOBUF "Recompile Protobuf Files" OFF)
 IF (NOT COMPILE_PROTOBUF)
   MESSAGE( STATUS "Will use pre-built language bindings.")
@@ -38,6 +44,16 @@ ELSE()
     )
 ENDIF()
 
+#Since the demo is in a different git project copy it to the demo
+#directory
+FILE( COPY ${CMAKE_CURRENT_SOURCE_DIR}/track_kalman.py
+      DESTINATION ${CMAKE_SOURCE_DIR}/demo
+    )
+
+#Copy the protobuflib directory to binary dir
+FILE( COPY ${CMAKE_CURRENT_SOURCE_DIR}/protobuflib
+        DESTINATION ${CMAKE_CURRENT_BINARY_DIR}
+      )
 # install the matlab bridge in the install directory 
 IF( NOT ${BUILD_3RDPARTY_PACKAGE} )
   INSTALL( DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/protobuf_defs
@@ -46,7 +62,15 @@ IF( NOT ${BUILD_3RDPARTY_PACKAGE} )
            COMPONENT Runtime
          )
   INSTALL( FILES ${MATLAB_BRIDGE_PY_SOURCE_FILES}
-           DESTINATION algorithms/matlab-bridge
+           DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/algorithms/matlab-bridge
+           COMPONENT Runtime
+         )
+  INSTALL( FILES ${MATLAB_BRIDGE_M_SOURCE_FILES}
+           DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/algorithms/matlab-bridge
+           COMPONENT Runtime
+         )
+  INSTALL( FILES track_kalman.py
+           DESTINATION demo
            COMPONENT Runtime
          )
 ENDIF( NOT ${BUILD_3RDPARTY_PACKAGE} )

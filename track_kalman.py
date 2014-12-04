@@ -24,7 +24,7 @@ runset = easy.createRunSet( "singleball.avi" )
 #
 # evaluate your tracking algorithm with a common match scoring method
 #
-tracker = easy.getDetector( "KalmanTracker:default -p 20133" )
+tracker = easy.getDetector( "KalmanTracker" )
 results = easy.detect( tracker, None, runset )
 easy.printResults( results )
 easy.printLabeledTrack( results )
