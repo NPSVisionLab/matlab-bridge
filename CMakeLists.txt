@@ -8,11 +8,9 @@ SET( MATLAB_BRIDGE_PY_SOURCE_FILES
   ${CMAKE_CURRENT_SOURCE_DIR}/MatlabBridge.py 
   ${CMAKE_CURRENT_SOURCE_DIR}/__init__.py )
 
-IF( NOT PROTOBUF_PROTOC_EXECUTABLE
-    OR NOT COMMAND PROTOBUF_GENERATE_PYTHON
-    OR NOT COMMAND PROTOBUF_GENERATE_MATLAB )
-  MESSAGE( STATUS "Google protobuf compiler or corresponding CMake configuration not found.")
-  MESSAGE( STATUS "Will use pre-built language bindings instead.")
+OPTION(COMPILE_PROTOBUF "Recompile Protobuf Files" OFF)
+IF (NOT COMPILE_PROTOBUF)
+  MESSAGE( STATUS "Will use pre-built language bindings.")
   FILE( COPY ${CMAKE_CURRENT_SOURCE_DIR}/protobuf_defs
         DESTINATION ${CMAKE_CURRENT_BINARY_DIR}
       )
@@ -21,6 +19,11 @@ IF( NOT PROTOBUF_PROTOC_EXECUTABLE
   FILE( GLOB PROTO_COMPILED_FILES ${CMAKE_CURRENT_BINARY_DIR}/protobuf_defs )
 
 ELSE()
+  IF( NOT PROTOBUF_PROTOC_EXECUTABLE
+        OR NOT COMMAND PROTOBUF_GENERATE_PYTHON
+        OR NOT COMMAND PROTOBUF_GENERATE_MATLAB )
+      MESSAGE( SEND_ERROR "Google protobuf compiler or corresponding CMake configuration not found.")
+  ENDIF()
   # create .py and .m protobuf language bindings:
   # protoc -I=. --python_out=./protobuf_defs protobuf_defs.proto
   # protoc -I=. --matlab_out=./protobuf_defs protobuf_defs.proto
@@ -35,7 +38,7 @@ ELSE()
     )
 ENDIF()
 
-# install the matlab bridge in the install directory
+# install the matlab bridge in the install directory 
 IF( NOT ${BUILD_3RDPARTY_PACKAGE} )
   INSTALL( DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/protobuf_defs
                      ${CMAKE_CURRENT_BINARY_DIR}/protobuflib
