@@ -50,6 +50,16 @@ FILE( COPY ${CMAKE_CURRENT_SOURCE_DIR}/track_kalman.py
       DESTINATION ${CMAKE_SOURCE_DIR}/demo
     )
 
+#Copy required py and m files to build dir
+FOREACH( ITEM ${MATLAB_BRIDGE_M_SOURCE_FILES}) 
+    FILE( COPY ${ITEM}
+          DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
+ENDFOREACH() 
+FOREACH( ITEM ${MATLAB_BRIDGE_PY_SOURCE_FILES}) 
+    FILE( COPY ${ITEM}
+          DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
+ENDFOREACH() 
+
 #Copy the protobuflib directory to binary dir
 FILE( COPY ${CMAKE_CURRENT_SOURCE_DIR}/protobuflib
         DESTINATION ${CMAKE_CURRENT_BINARY_DIR}
@@ -62,11 +72,11 @@ IF( NOT ${BUILD_3RDPARTY_PACKAGE} )
            COMPONENT Runtime
          )
   INSTALL( FILES ${MATLAB_BRIDGE_PY_SOURCE_FILES}
-           DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/algorithms/matlab-bridge
+           DESTINATION algorithms/matlab-bridge
            COMPONENT Runtime
          )
   INSTALL( FILES ${MATLAB_BRIDGE_M_SOURCE_FILES}
-           DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/algorithms/matlab-bridge
+           DESTINATION algorithms/matlab-bridge
            COMPONENT Runtime
          )
   INSTALL( FILES track_kalman.py
