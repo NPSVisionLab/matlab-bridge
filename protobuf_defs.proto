@@ -5,6 +5,7 @@ message MatlabBridgeMsg {
     optional Model model = 4;
 }
 
+
 message Model {
     optional FilePath mPath = 1;
 }
@@ -142,6 +143,20 @@ message LabeledTrack {
     optional Interpolation interp = 6 [default = DISCRETE];
 }
 
+message LabeledLocation {
+    enum Interpolation {
+        DISCRETE = 0;
+        LINEAR = 1;
+        POLYNOMIAL = 2;
+    }
+    optional float confidence = 1 [default = 0.0];
+    optional Label lab = 2;
+    optional ImageSubstrate imgSub = 3;
+    optional VideoSubstrate vidSub = 4;
+    optional BBox loc = 5;
+}
+
+
 //sequence<FrameLocation> FrameLocationList;
 message FrameLocationList {
     repeated FrameLocation framelocation = 1;
@@ -181,6 +196,14 @@ message Point2D {
     optional int64 y = 2;
 }
 
+message BBox {
+    optional int64 x = 1;
+    optional int64 y = 2;
+    optional int64 width = 3;
+    optional int64 height = 4;
+}
+
+
 //class PreciseLocation extends Location {
 //    float centerX;
 //    float centerY;
@@ -194,6 +217,7 @@ message PreciseLocation {
 message LabelableList {
     repeated Labelable labelable = 1;
     repeated LabeledTrack labeledTrack = 2;
+    repeated LabeledLocation labeledLocation = 3;
 }
 
 //struct Purpose {

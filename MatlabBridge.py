@@ -129,11 +129,18 @@ def to_CVAC_ResultSet( protobuf_matlab_bridge_msg ):
     rslt_set = []
     for ridx, rslt in enumerate( protobuf_matlab_bridge_msg.res.results.rslt ):
         # set original label for each result
-        if( protobuf_matlab_bridge_msg.res.results.rslt[ridx].original.vidSub ): # VideoSubstrate
+       
+        '''
+          Note: All the fields should be checked with HasField, but for some reason
+          some of the field checks fail with an exception with HasField.  But in the
+          case of vidSub and imgSub, if we just check for field not null it does not work
+          and we have to use HasField.
+        '''
+        if (protobuf_matlab_bridge_msg.res.results.rslt[ridx].original.HasField('vidSub')): # VideoSubstrate
             # todo: copy the framepaths
             opath = cvac.FilePath( directory = cvac.DirectoryPath( relativePath = protobuf_matlab_bridge_msg.res.results.rslt[ridx].original.vidSub.videopath.directory.relativePath ), filename = protobuf_matlab_bridge_msg.res.results.rslt[ridx].original.vidSub.videopath.filename )
             osub = cvac.VideoSubstrate( videopath = opath, width = protobuf_matlab_bridge_msg.res.results.rslt[ridx].original.vidSub.width, height = protobuf_matlab_bridge_msg.res.results.rslt[ridx].original.vidSub.height )
-        elif( protobuf_matlab_bridge_msg.res.results.rslt[ridx].original.imgSub ): # ImageSubstrate
+        elif (protobuf_matlab_bridge_msg.res.results.rslt[ridx].original.HasField('imgSub') ): # ImageSubstrate
             opath = cvac.FilePath( directory = cvac.DirectoryPath( relativePath = protobuf_matlab_bridge_msg.res.results.rslt[ridx].original.imgSub.path.directory.relativePath ), filename = protobuf_matlab_bridge_msg.res.results.rslt[ridx].original.imgSub.path.filename )
             osub = cvac.ImageSubstrate( path = opath, width = protobuf_matlab_bridge_msg.res.results.rslt[ridx].original.imgSub.width, height = protobuf_matlab_bridge_msg.res.results.rslt[ridx].original.imgSub.height )
         else:
@@ -144,7 +151,8 @@ def to_CVAC_ResultSet( protobuf_matlab_bridge_msg ):
         # set found label for each result
         #   Labelable case
         flabelable = []
-        if( protobuf_matlab_bridge_msg.res.results.rslt[0].foundLabels.labelable ):
+        
+        if (protobuf_matlab_bridge_msg.res.results.rslt[ridx].foundLabels.labelable ):
             if( protobuf_matlab_bridge_msg.res.results.rslt[ridx].foundLabels.labelable[0].vidSub ): # VideoSubstrate
                 fpath = cvac.FilePath( directory = cvac.DirectoryPath( relativePath = protobuf_matlab_bridge_msg.res.results.rslt[ridx].foundLabels.labelable[0].vidSub.videopath.directory.relativePath ), filename = protobuf_matlab_bridge_msg.res.results.rslt[ridx].original.vidSub.videopath.filename )
                 fsub = cvac.VideoSubstrate( videopath = fpath, width = protobuf_matlab_bridge_msg.res.results.rslt[ridx].original.vidSub.width, height = protobuf_matlab_bridge_msg.res.results.rslt[ridx].original.vidSub.height )
@@ -160,8 +168,10 @@ def to_CVAC_ResultSet( protobuf_matlab_bridge_msg ):
                 flabelable = cvac.Labelable( confidence = protobuf_matlab_bridge_msg.res.results.rslt[ridx].foundLabels.labelable[0].confidence, lab = flab, sub = fsub )
         
         #   LabeledTrack case
-        ftlabelable = []
-        if( protobuf_matlab_bridge_msg.res.results.rslt[0].foundLabels.labeledTrack ):
+        ftlabelable = [] # If we have video tracks
+        locLabelable = [] # If we have location Labelabables
+        if (protobuf_matlab_bridge_msg.res.results.rslt[ridx].foundLabels.labeledTrack ):
+ 
             if( protobuf_matlab_bridge_msg.res.results.rslt[ridx].foundLabels.labeledTrack[0].vidSub ): # VideoSubstrate
                 ftpath = cvac.FilePath( directory = cvac.DirectoryPath( relativePath = protobuf_matlab_bridge_msg.res.results.rslt[ridx].foundLabels.labeledTrack[0].vidSub.videopath.directory.relativePath ), filename = protobuf_matlab_bridge_msg.res.results.rslt[ridx].original.vidSub.videopath.filename )
                 ftsub = cvac.VideoSubstrate( videopath = ftpath, width = protobuf_matlab_bridge_msg.res.results.rslt[ridx].original.vidSub.width, height = protobuf_matlab_bridge_msg.res.results.rslt[ridx].original.vidSub.height )
@@ -169,7 +179,7 @@ def to_CVAC_ResultSet( protobuf_matlab_bridge_msg ):
                 ftpath = cvac.FilePath( directory = cvac.DirectoryPath( relativePath = protobuf_matlab_bridge_msg.res.results.rslt[ridx].foundLabels.labeledTrack[0].imgSub.path.directory.relativePath ), filename = protobuf_matlab_bridge_msg.res.results.rslt[ridx].original.imgSub.path.filename )
                 ftsub = cvac.ImageSubstrate( path = ftpath, width = protobuf_matlab_bridge_msg.res.results.rslt[ridx].original.imgSub.width, height = protobuf_matlab_bridge_msg.res.results.rslt[ridx].original.imgSub.height )
             else:
-                print "error: unsupported LabeledTrack (found) substrate"
+                print "error: unsupported LabeledLocation (found) substrate"
             ftlab = cvac.Label( hasLabel = protobuf_matlab_bridge_msg.res.results.rslt[ridx].foundLabels.labeledTrack[0].lab.hasLabel, name = protobuf_matlab_bridge_msg.res.results.rslt[ridx].foundLabels.labeledTrack[0].lab.name , semantix = cvac.Semantics( url = protobuf_matlab_bridge_msg.res.results.rslt[ridx].foundLabels.labeledTrack[0].lab.semantix.url ) )
             track = []
             for fidx, frm in enumerate(protobuf_matlab_bridge_msg.res.results.rslt[ridx].foundLabels.labeledTrack[0].keyframesLocations.framelocation):
@@ -183,11 +193,11 @@ def to_CVAC_ResultSet( protobuf_matlab_bridge_msg ):
                     print "error: unsupported location type"
                 frmLoc = cvac.FrameLocation( frame=vst, loc=pt2d, occluded=frm.occluded,outOfFrame=frm.outOfFrame )
                 track.append( frmLoc )
-            if ( protobuf_matlab_bridge_msg.res.results.rslt[0].foundLabels.labeledTrack[0].interp == 0 ):
+            if ( protobuf_matlab_bridge_msg.res.results.rslt[ridx].foundLabels.labeledTrack[0].interp == 0 ):
                 interpol = cvac.Interpolation.DISCRETE
-            elif ( protobuf_matlab_bridge_msg.res.results.rslt[0].foundLabels.labeledTrack[0].interp == 1 ):
+            elif ( protobuf_matlab_bridge_msg.res.results.rslt[ridx].foundLabels.labeledTrack[0].interp == 1 ):
                 interpol = cvac.Interpolation.LINEAR
-            elif ( protobuf_matlab_bridge_msg.res.results.rslt[0].foundLabels.labeledTrack[0].interp == 2 ):
+            elif ( protobuf_matlab_bridge_msg.res.results.rslt[ridx].foundLabels.labeledTrack[0].interp == 2 ):
                 interpol = cvac.Interpolation.POLYNOMIAL
             else:
                 print "error: interpolation type not supported"
@@ -195,9 +205,27 @@ def to_CVAC_ResultSet( protobuf_matlab_bridge_msg ):
                 ftlabelable = cvac.LabeledTrack( confidence = protobuf_matlab_bridge_msg.res.results.rslt[ridx].foundLabels.labeledTrack[0].confidence, lab = ftlab, sub = ftsub, keyframesLocations=track, interp=interpol )
             else: # ImageSubstrate
                 ftlabelable = cvac.LabeledTrack( confidence = protobuf_matlab_bridge_msg.res.results.rslt[ridx].foundLabels.labeledTrack[0].confidence, lab = ftlab, sub = ftsub, keyframesLocations=track, interp=interpol )
-        
-
-        
+        elif (protobuf_matlab_bridge_msg.res.results.rslt[ridx].foundLabels.labeledLocation ):
+            if( protobuf_matlab_bridge_msg.res.results.rslt[ridx].foundLabels.labeledLocation[0].vidSub ): # VideoSubstrate
+                ftpath = cvac.FilePath( directory = cvac.DirectoryPath( relativePath = protobuf_matlab_bridge_msg.res.results.rslt[ridx].foundLabels.labeledLocation[0].vidSub.videopath.directory.relativePath ), filename = protobuf_matlab_bridge_msg.res.results.rslt[ridx].original.vidSub.videopath.filename )
+                ftsub = cvac.VideoSubstrate( videopath = ftpath, width = protobuf_matlab_bridge_msg.res.results.rslt[ridx].original.vidSub.width, height = protobuf_matlab_bridge_msg.res.results.rslt[ridx].original.vidSub.height )
+            elif( protobuf_matlab_bridge_msg.res.results.rslt[ridx].foundLabels.labeledLocation[0].imgSub ): # ImageSubstrate
+                ftpath = cvac.FilePath( directory = cvac.DirectoryPath( relativePath = protobuf_matlab_bridge_msg.res.results.rslt[ridx].foundLabels.labeledLocation[0].imgSub.path.directory.relativePath ), filename = protobuf_matlab_bridge_msg.res.results.rslt[ridx].original.imgSub.path.filename )
+                ftsub = cvac.ImageSubstrate( path = ftpath, width = protobuf_matlab_bridge_msg.res.results.rslt[ridx].original.imgSub.width, height = protobuf_matlab_bridge_msg.res.results.rslt[ridx].original.imgSub.height )
+            else:
+                print "error: unsupported LabeledTrack (found) substrate"
+            hasLabel = protobuf_matlab_bridge_msg.res.results.rslt[ridx].foundLabels.labeledLocation[0].lab.hasLabel
+            name = protobuf_matlab_bridge_msg.res.results.rslt[ridx].foundLabels.labeledLocation[0].lab.name 
+            semantix = cvac.Semantics( url = protobuf_matlab_bridge_msg.res.results.rslt[ridx].foundLabels.labeledLocation[0].lab.semantix.url )
+            ftlab = cvac.Label( hasLabel = hasLabel, name = name , semantix = semantix )
+            for lidx, loc in enumerate(protobuf_matlab_bridge_msg.res.results.rslt[ridx].foundLabels.labeledLocation):
+                ftbox = cvac.BBox()   
+                ftbox.x = protobuf_matlab_bridge_msg.res.results.rslt[ridx].foundLabels.labeledLocation[lidx].loc.x
+                ftbox.y = protobuf_matlab_bridge_msg.res.results.rslt[ridx].foundLabels.labeledLocation[lidx].loc.y
+                ftbox.width = protobuf_matlab_bridge_msg.res.results.rslt[ridx].foundLabels.labeledLocation[lidx].loc.width
+                ftbox.height = protobuf_matlab_bridge_msg.res.results.rslt[ridx].foundLabels.labeledLocation[lidx].loc.height
+                confidence = protobuf_matlab_bridge_msg.res.results.rslt[ridx].foundLabels.labeledLocation[lidx].confidence
+                locLabelable.append(cvac.LabeledLocation( confidence = confidence, lab = ftlab, sub = ftsub, loc = ftbox ))
         # append result
         if flabelable and ftlabelable:
             rslt_set.append( cvac.Result( olabelable, [ flabelable, ftlabelable ] ) )
@@ -205,6 +233,8 @@ def to_CVAC_ResultSet( protobuf_matlab_bridge_msg ):
             rslt_set.append( cvac.Result( olabelable, [ flabelable ] ) )
         elif ftlabelable:
             rslt_set.append( cvac.Result( olabelable, [ ftlabelable ] ) )
+        elif locLabelable:
+            rslt_set.append( cvac.Result(olabelable, locLabelable))
         else:
             print "debug: didn't find a label, so setting an empty one"
             rslt_set.append( cvac.Result( olabelable, [ cvac.Labelable() ] ) )
@@ -279,55 +309,55 @@ class MatlabBridgeTrainerI(cvac.DetectorTrainer, threading.Thread):
                     print("info: got connection")
                     tsize = len(self.runSetFromClient.purposedLists)
                     if tsize != 2:
-                        print("error: Invalid Size of Class. It should be TWO classes")
-                    else:
-                        # construct the training message to pass to Matlab
-                        msg = to_protobuf( self.runSetFromClient, self.propertiesFromClient )
-                        
-                        # pass the message to Matlab
-                        pass_message( msg, self.matlabMsgPath )
-                        print( "debug: {0} service message passed. MATLAB output to follow"\
-                               .format( self.matlabService ))
-                        
-                        # start Matlab process
-                        cmd = "msg_path='{0}'; matlab_bridge_dir='{1}'; easy_data_dir='{2}'; run('{3}'); exit"\
-                            .format(self.matlabMsgPath, thisPath, dataPath, self.matlabEntryFunc)
-                        
-                        #   get OS (Windows or OSX)
-                        op_sys = sys.platform
-                        if op_sys == 'darwin':
-                            print("----------------------------------------------------------------------")
-                            process_success = call( [ self.matlabExecutable, "-nodesktop",
-                                                      "-nosplash", "-nodisplay", "-r", cmd ] )
-                            print("----------------------------------------------------------------------")
-                        elif op_sys == 'win32':
-                            # TODO: windows commands
-                            print("----------------------------------------------------------------------") 
-                            process_success = call( [ self.matlabExecutable, "-nodesktop",
-                                                      "-nosplash", "-nodisplay", "-r", cmd ] )
-                            # on Windows, write a semaphore file that is waited on below;
-                            # this is because the Windows Matlab executable starts another process and
-                            # exits right away.
-                            while not os.path.isfile( self.matlabMsgPath+'.done' ):
-                                time.sleep(0.1) # 0.1 seconds
-                            os.remove( self.matlabMsgPath+'.done' )
-                            print("----------------------------------------------------------------------")
-                        else:
-                            # TODO: other operating systems
-                            print("error: Operating system not supported")
-                        
-                        # retrieve the matlab bridge message
-                        if process_success == 0:
-                            protobuf_matlab_bridge_msg = retrieve_message( self.matlabMsgPath )
-                        else:
-                            #TODO: error checking
-                            print("The system call to MATLAB, or the MATLAB process itself, failed")
-                        
-                        # report the result
-                        model = easy.getCvacPath( protobuf_matlab_bridge_msg.model.mPath.directory.relativePath + '/' + protobuf_matlab_bridge_msg.model.mPath.filename )
-                        p.createdDetector( model )
-                        p.message(2,"The trained model has been saved to " + model.directory.relativePath + "/" + model.filename + '\n' )
+                        print("Warning: Number of RunSet Purposes is {0}".format(tsize))
                     
+                    # construct the training message to pass to Matlab
+                    msg = to_protobuf( self.runSetFromClient, self.propertiesFromClient )
+                    
+                    # pass the message to Matlab
+                    pass_message( msg, self.matlabMsgPath )
+                    print( "debug: {0} service message passed. MATLAB output to follow"\
+                           .format( self.matlabService ))
+                    
+                    # start Matlab process
+                    cmd = "msg_path='{0}'; matlab_bridge_dir='{1}'; easy_data_dir='{2}'; run('{3}'); exit"\
+                        .format(self.matlabMsgPath, thisPath, dataPath, self.matlabEntryFunc)
+                    
+                    #   get OS (Windows or OSX)
+                    op_sys = sys.platform
+                    if op_sys == 'darwin':
+                        print("----------------------------------------------------------------------")
+                        process_success = call( [ self.matlabExecutable, "-nodesktop",
+                                                  "-nosplash", "-nodisplay", "-r", cmd ] )
+                        print("----------------------------------------------------------------------")
+                    elif op_sys == 'win32':
+                        # TODO: windows commands
+                        print("----------------------------------------------------------------------") 
+                        process_success = call( [ self.matlabExecutable, "-nodesktop",
+                                                 "-nosplash", "-nodisplay", "-r", cmd ] )
+                        # on Windows, write a semaphore file that is waited on below;
+                        # this is because the Windows Matlab executable starts another process and
+                        # exits right away.
+                        while not os.path.isfile( self.matlabMsgPath+'.done' ):
+                            time.sleep(0.1) # 0.1 seconds
+                        os.remove( self.matlabMsgPath+'.done' )
+                        print("----------------------------------------------------------------------")
+                    else:
+                        # TODO: other operating systems
+                        print("error: Operating system not supported")
+                    
+                    # retrieve the matlab bridge message
+                    if process_success == 0:
+                        protobuf_matlab_bridge_msg = retrieve_message( self.matlabMsgPath )
+                    else:
+                        #TODO: error checking
+                        print("The system call to MATLAB, or the MATLAB process itself, failed")
+                    
+                    # report the result
+                    model = easy.getCvacPath( protobuf_matlab_bridge_msg.model.mPath.directory.relativePath + '/' + protobuf_matlab_bridge_msg.model.mPath.filename )
+                    p.createdDetector( model )
+                    p.message(2,"The trained model has been saved to " + model.directory.relativePath + "/" + model.filename + '\n' )
+                
                     self._cond.acquire()
                     try:
                         self._clients.remove(p)
@@ -440,13 +470,13 @@ class MatlabBridgeDetectorI(cvac.Detector, threading.Thread):
                     # retrieve the matlab bridge message
                     if process_success == 0:
                         protobuf_matlab_bridge_msg = retrieve_message( self.matlabMsgPath )
+                       
                     else:
                         #TODO: error checking
                         print("The system call to MATLAB, or the MATLAB process itself, failed")
                     
                     # convert the matlab bridge message results to CVAC ResultSet
                     res = to_CVAC_ResultSet( protobuf_matlab_bridge_msg )
-                    print res
                     
                     p.foundNewResults(res)
                     
