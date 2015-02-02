@@ -330,6 +330,11 @@ class MatlabBridgeTrainerI(cvac.DetectorTrainer, threading.Thread):
                         process_success = call( [ self.matlabExecutable, "-nodesktop",
                                                   "-nosplash", "-nodisplay", "-r", cmd ] )
                         print("----------------------------------------------------------------------")
+                    elif op_sys == 'linux2':
+                        print("----------------------------------------------------------------------")
+                        process_success = call( [ self.matlabExecutable, "-nodesktop",
+                                                  "-nosplash", "-nodisplay", "-r", cmd ] )
+                        print("----------------------------------------------------------------------")
                     elif op_sys == 'win32':
                         # TODO: windows commands
                         print("----------------------------------------------------------------------") 
