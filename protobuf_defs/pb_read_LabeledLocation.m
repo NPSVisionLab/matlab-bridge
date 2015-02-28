@@ -1,6 +1,6 @@
-function [labeled_loc] = pb_read_LabeledLocation(buffer, buffer_start, buffer_end)
+function [labeled_location] = pb_read_LabeledLocation(buffer, buffer_start, buffer_end)
 %pb_read_LabeledLocation Reads the protobuf message LabeledLocation.
-%   function [labeled_loc] = pb_read_LabeledLocation(buffer, buffer_start, buffer_end)
+%   function [labeled_location] = pb_read_LabeledLocation(buffer, buffer_start, buffer_end)
 %
 %   INPUTS:
 %     buffer       : a buffer of uint8's to parse
@@ -15,8 +15,9 @@ function [labeled_loc] = pb_read_LabeledLocation(buffer, buffer_start, buffer_en
 %     imgSub         : optional <a href="matlab:help pb_read_ImageSubstrate">ImageSubstrate</a>, defaults to struct([]).
 %     vidSub         : optional <a href="matlab:help pb_read_VideoSubstrate">VideoSubstrate</a>, defaults to struct([]).
 %     loc            : optional <a href="matlab:help pb_read_BBox">BBox</a>, defaults to struct([]).
+%     sloc           : optional <a href="matlab:help pb_read_Silhouette">Silhouette</a>, defaults to struct([]).
 %
-%   See also pb_read_Label, pb_read_ImageSubstrate, pb_read_VideoSubstrate, pb_read_FrameLocationList, pb_read_MatlabBridgeMsg, pb_read_Model, pb_read_Properties, pb_read_Result, pb_read_ResultList, pb_read_ResultSet, pb_read_DirectoryPath, pb_read_FilePath, pb_read_FramePathPair, pb_read_Semantics, pb_read_LabelProperties, pb_read_Labelable, pb_read_FrameLocation, pb_read_VideoSeekTime, pb_read_Point2D, pb_read_PreciseLocation, pb_read_LabelableList, pb_read_Purpose, pb_read_PurposedLabelableSeq, pb_read_PurposedListSequence, pb_read_RunSet.
+%   See also pb_read_Label, pb_read_ImageSubstrate, pb_read_VideoSubstrate, pb_read_BBox, pb_read_Silhouette, pb_read_MatlabBridgeMsg, pb_read_Model, pb_read_Properties, pb_read_Result, pb_read_ResultList, pb_read_ResultSet, pb_read_DirectoryPath, pb_read_FilePath, pb_read_FramePathPair, pb_read_Semantics, pb_read_LabelProperties, pb_read_Labelable, pb_read_LabeledTrack, pb_read_FrameLocationList, pb_read_FrameLocation, pb_read_VideoSeekTime, pb_read_Point2D, pb_read_PreciseLocation, pb_read_LabelableList, pb_read_Purpose, pb_read_PurposedLabelableSeq, pb_read_PurposedListSequence, pb_read_RunSet.
   
   if (nargin < 1)
     buffer = uint8([]);
@@ -29,5 +30,5 @@ function [labeled_loc] = pb_read_LabeledLocation(buffer, buffer_start, buffer_en
   end
   
   descriptor = pb_descriptor_LabeledLocation();
-  labeled_loc = pblib_generic_parse_from_string(buffer, descriptor, buffer_start, buffer_end);
-  labeled_loc.descriptor_function = @pb_descriptor_LabeledLocation;
+  labeled_location = pblib_generic_parse_from_string(buffer, descriptor, buffer_start, buffer_end);
+  labeled_location.descriptor_function = @pb_descriptor_LabeledLocation;

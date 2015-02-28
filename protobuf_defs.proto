@@ -154,6 +154,7 @@ message LabeledLocation {
     optional ImageSubstrate imgSub = 3;
     optional VideoSubstrate vidSub = 4;
     optional BBox loc = 5;
+    optional Silhouette sloc = 6;
 }
 
 
@@ -196,6 +197,10 @@ message Point2D {
     optional int64 y = 2;
 }
 
+//class PreciseBBox extends PreciseLocation {
+//    float width;
+//    float height;
+//};
 message BBox {
     optional int64 x = 1;
     optional int64 y = 2;
@@ -203,6 +208,13 @@ message BBox {
     optional int64 height = 4;
 }
 
+
+//class Silhouette extends Location {
+//    Point2DList points;
+//};
+message Silhouette {
+    repeated Point2D points = 1;
+}
 
 //class PreciseLocation extends Location {
 //    float centerX;

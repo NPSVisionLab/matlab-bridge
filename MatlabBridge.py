@@ -50,44 +50,52 @@ def to_protobuf ( run, props, model=None ):
         msg.run.purposedLists.purlist[plidx].pur.classID = pls.pur.classID
         # set the PurposedLabelableSeq object's LabelableList fields, for each
         # Labelable object (confidence, lab, sub)
-        for laidx, lb in enumerate( pls.labeledArtifacts ):
-            # add an Labelable object
-            msg.run.purposedLists.purlist[plidx].labeledArtifacts.labelable.add()
-            # set the Labelable object's confidence, lab, sub fields
-            msg.run.purposedLists.purlist[plidx].labeledArtifacts.labelable[laidx].confidence = lb.confidence
-            msg.run.purposedLists.purlist[plidx].labeledArtifacts.labelable[laidx].lab.hasLabel = lb.lab.hasLabel
-            msg.run.purposedLists.purlist[plidx].labeledArtifacts.labelable[laidx].lab.name = lb.lab.name
-            # LabelProperties not set yet
-            # msg.run.purposedLists.purlist[plidx].labeledArtifacts.labelable[laidx].lab.properties = lb.lab.properties
-            msg.run.purposedLists.purlist[plidx].labeledArtifacts.labelable[laidx].lab.semantix.url = lb.lab.semantix.url
-            
+        
+        for lb in pls.labeledArtifacts:
+            # add an Labelable object called lab
+            if type(lb) == cvac.LabeledLocation:
+                lab = msg.run.purposedLists.purlist[plidx].labeledArtifacts.labeledLocation.add()       
+                if type(lb.loc) == cvac.BBox:
+                    lab.loc.x = lb.loc.x
+                    lab.loc.y = lb.loc.y
+                    lab.loc.width = lb.loc.width
+                    lab.loc.height = lb.loc.height
+                elif type(lb.loc) == cvac.Silhouette:
+                    for pidx, p in enumerate(lb.loc.points):
+                        lab.sloc.points.add()
+                        lab.sloc.points[pidx].x = p.x
+                        lab.sloc.points[pidx].y = p.y  
+            else:
+                lab = msg.run.purposedLists.purlist[plidx].labeledArtifacts.labelable.add()
+  
+            lab.confidence = lb.confidence
+            lab.lab.hasLabel = lb.lab.hasLabel
+            lab.lab.name = lb.lab.name
+            lab.lab.semantix.url = lb.lab.semantix.url    
             if( type( lb.sub ) == cvac.VideoSubstrate ):
-                msg.run.purposedLists.purlist[plidx].labeledArtifacts.labelable[laidx].vidSub.width = lb.sub.width
-                msg.run.purposedLists.purlist[plidx].labeledArtifacts.labelable[laidx].vidSub.height = lb.sub.height
-                msg.run.purposedLists.purlist[plidx].labeledArtifacts.labelable[laidx].vidSub.videopath.directory.relativePath = lb.sub.videopath.directory.relativePath
-                msg.run.purposedLists.purlist[plidx].labeledArtifacts.labelable[laidx].vidSub.videopath.filename = lb.sub.videopath.filename
+                lab.vidSub.width = lb.sub.width
+                lab.vidSub.height = lb.sub.height
+                lab.vidSub.videopath.directory.relativePath = lb.sub.videopath.directory.relativePath
+                lab.vidSub.videopath.filename = lb.sub.videopath.filename
                 cnt = 0;
                 for k, val in zip( lb.sub.framepaths.keys(), lb.sub.framepaths.values() ):
-                    msg.run.purposedLists.purlist[plidx].labeledArtifacts.labelable[laidx] \
-                        .vidSub.framepaths.add()
-                    msg.run.purposedLists.purlist[plidx].labeledArtifacts.labelable[laidx] \
-                        .vidSub.framepaths[ cnt ].frameNum = k
+                    lab.vidSub.framepaths.add()
+                    lab.vidSub.framepaths[ cnt ].frameNum = k
                     #fpath = cvac.FilePath( directory = cvac.DirectoryPath(
                     #    relativePath = val.directory.relativePath ), filename = val.filename )
                     #msg.run.purposedLists.purlist[plidx].labeledArtifacts.labelable[laidx] \
                     #    .vidSub.framepaths[ cnt ].framepath = fpath
-                    msg.run.purposedLists.purlist[plidx].labeledArtifacts.labelable[laidx] \
-                        .vidSub.framepaths[ cnt ].framepath.directory.relativePath = \
+                    lab.vidSub.framepaths[ cnt ].framepath.directory.relativePath = \
                         val.directory.relativePath
-                    msg.run.purposedLists.purlist[plidx].labeledArtifacts.labelable[laidx] \
-                        .vidSub.framepaths[ cnt ].framepath.filename = val.filename
+                    lab.vidSub.framepaths[ cnt ].framepath.filename = val.filename
                     cnt = cnt + 1
             if( type( lb.sub ) == cvac.ImageSubstrate ):
-                msg.run.purposedLists.purlist[plidx].labeledArtifacts.labelable[laidx].imgSub.width = lb.sub.width
-                msg.run.purposedLists.purlist[plidx].labeledArtifacts.labelable[laidx].imgSub.height = lb.sub.height
-                msg.run.purposedLists.purlist[plidx].labeledArtifacts.labelable[laidx].imgSub.path.directory.relativePath = lb.sub.path.directory.relativePath
-                msg.run.purposedLists.purlist[plidx].labeledArtifacts.labelable[laidx].imgSub.path.filename = lb.sub.path.filename
-    
+                lab.imgSub.width = lb.sub.width
+                lab.imgSub.height = lb.sub.height
+                lab.imgSub.path.directory.relativePath = lb.sub.path.directory.relativePath
+                lab.imgSub.path.filename = lb.sub.path.filename
+            
+            
     #   Service Model
     if model != None:
         msg.model.mPath.filename = model.filename

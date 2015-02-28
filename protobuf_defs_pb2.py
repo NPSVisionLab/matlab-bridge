@@ -11,7 +11,7 @@ from google.protobuf import descriptor_pb2
 DESCRIPTOR = descriptor.FileDescriptor(
   name='protobuf_defs.proto',
   package='',
-  serialized_pb='\n\x13protobuf_defs.proto\"s\n\x0fMatlabBridgeMsg\x12\x14\n\x03run\x18\x01 \x01(\x0b\x32\x07.RunSet\x12\x1a\n\x05props\x18\x02 \x03(\x0b\x32\x0b.Properties\x12\x17\n\x03res\x18\x03 \x01(\x0b\x32\n.ResultSet\x12\x15\n\x05model\x18\x04 \x01(\x0b\x32\x06.Model\"!\n\x05Model\x12\x18\n\x05mPath\x18\x01 \x01(\x0b\x32\t.FilePath\",\n\nProperties\x12\r\n\x03key\x18\x01 \x01(\t:\x00\x12\x0f\n\x05value\x18\x02 \x01(\t:\x00\"K\n\x06Result\x12\x1c\n\x08original\x18\x01 \x01(\x0b\x32\n.Labelable\x12#\n\x0b\x66oundLabels\x18\x02 \x01(\x0b\x32\x0e.LabelableList\"#\n\nResultList\x12\x15\n\x04rslt\x18\x01 \x03(\x0b\x32\x07.Result\")\n\tResultSet\x12\x1c\n\x07results\x18\x01 \x01(\x0b\x32\x0b.ResultList\"\'\n\rDirectoryPath\x12\x16\n\x0crelativePath\x18\x01 \x01(\t:\x00\"A\n\x08\x46ilePath\x12!\n\tdirectory\x18\x01 \x01(\x0b\x32\x0e.DirectoryPath\x12\x12\n\x08\x66ilename\x18\x02 \x01(\t:\x00\"N\n\x0eImageSubstrate\x12\x10\n\x05width\x18\x01 \x01(\x03:\x01\x30\x12\x11\n\x06height\x18\x02 \x01(\x03:\x01\x30\x12\x17\n\x04path\x18\x03 \x01(\x0b\x32\t.FilePath\"w\n\x0eVideoSubstrate\x12\x10\n\x05width\x18\x01 \x01(\x03:\x01\x30\x12\x11\n\x06height\x18\x02 \x01(\x03:\x01\x30\x12\x1c\n\tvideopath\x18\x03 \x01(\x0b\x32\t.FilePath\x12\"\n\nframepaths\x18\x04 \x03(\x0b\x32\x0e.FramePathPair\"?\n\rFramePathPair\x12\x10\n\x08\x66rameNum\x18\x01 \x01(\x03\x12\x1c\n\tframepath\x18\x02 \x01(\x0b\x32\t.FilePath\"\x1a\n\tSemantics\x12\r\n\x03url\x18\x01 \x01(\t:\x00\"1\n\x0fLabelProperties\x12\r\n\x03key\x18\x01 \x01(\t:\x00\x12\x0f\n\x05value\x18\x02 \x01(\t:\x00\"t\n\x05Label\x12\x17\n\x08hasLabel\x18\x01 \x01(\x08:\x05\x66\x61lse\x12\x0e\n\x04name\x18\x02 \x01(\t:\x00\x12$\n\nproperties\x18\x03 \x01(\x0b\x32\x10.LabelProperties\x12\x1c\n\x08semantix\x18\x04 \x01(\x0b\x32\n.Semantics\"y\n\tLabelable\x12\x15\n\nconfidence\x18\x01 \x01(\x02:\x01\x30\x12\x13\n\x03lab\x18\x02 \x01(\x0b\x32\x06.Label\x12\x1f\n\x06imgSub\x18\x03 \x01(\x0b\x32\x0f.ImageSubstrate\x12\x1f\n\x06vidSub\x18\x04 \x01(\x0b\x32\x0f.VideoSubstrate\"\x9e\x02\n\x0cLabeledTrack\x12\x15\n\nconfidence\x18\x01 \x01(\x02:\x01\x30\x12\x13\n\x03lab\x18\x02 \x01(\x0b\x32\x06.Label\x12\x1f\n\x06imgSub\x18\x03 \x01(\x0b\x32\x0f.ImageSubstrate\x12\x1f\n\x06vidSub\x18\x04 \x01(\x0b\x32\x0f.VideoSubstrate\x12.\n\x12keyframesLocations\x18\x05 \x01(\x0b\x32\x12.FrameLocationList\x12\x35\n\x06interp\x18\x06 \x01(\x0e\x32\x1b.LabeledTrack.Interpolation:\x08\x44ISCRETE\"9\n\rInterpolation\x12\x0c\n\x08\x44ISCRETE\x10\x00\x12\n\n\x06LINEAR\x10\x01\x12\x0e\n\nPOLYNOMIAL\x10\x02\"\xce\x01\n\x0fLabeledLocation\x12\x15\n\nconfidence\x18\x01 \x01(\x02:\x01\x30\x12\x13\n\x03lab\x18\x02 \x01(\x0b\x32\x06.Label\x12\x1f\n\x06imgSub\x18\x03 \x01(\x0b\x32\x0f.ImageSubstrate\x12\x1f\n\x06vidSub\x18\x04 \x01(\x0b\x32\x0f.VideoSubstrate\x12\x12\n\x03loc\x18\x05 \x01(\x0b\x32\x05.BBox\"9\n\rInterpolation\x12\x0c\n\x08\x44ISCRETE\x10\x00\x12\n\n\x06LINEAR\x10\x01\x12\x0e\n\nPOLYNOMIAL\x10\x02\":\n\x11\x46rameLocationList\x12%\n\rframelocation\x18\x01 \x03(\x0b\x32\x0e.FrameLocation\"\x9f\x01\n\rFrameLocation\x12\x1d\n\x05\x66rame\x18\x01 \x01(\x0b\x32\x0e.VideoSeekTime\x12\x15\n\x03loc\x18\x02 \x01(\x0b\x32\x08.Point2D\x12$\n\nlocPrecise\x18\x03 \x01(\x0b\x32\x10.PreciseLocation\x12\x17\n\x08occluded\x18\x04 \x01(\x08:\x05\x66\x61lse\x12\x19\n\noutOfFrame\x18\x05 \x01(\x08:\x05\x66\x61lse\"/\n\rVideoSeekTime\x12\x0c\n\x04time\x18\x01 \x01(\x03\x12\x10\n\x08\x66ramecnt\x18\x02 \x01(\x03\"\x1f\n\x07Point2D\x12\t\n\x01x\x18\x01 \x01(\x03\x12\t\n\x01y\x18\x02 \x01(\x03\";\n\x04\x42\x42ox\x12\t\n\x01x\x18\x01 \x01(\x03\x12\t\n\x01y\x18\x02 \x01(\x03\x12\r\n\x05width\x18\x03 \x01(\x03\x12\x0e\n\x06height\x18\x04 \x01(\x03\"\'\n\x0fPreciseLocation\x12\t\n\x01x\x18\x01 \x01(\x02\x12\t\n\x01y\x18\x02 \x01(\x02\"~\n\rLabelableList\x12\x1d\n\tlabelable\x18\x01 \x03(\x0b\x32\n.Labelable\x12#\n\x0clabeledTrack\x18\x02 \x03(\x0b\x32\r.LabeledTrack\x12)\n\x0flabeledLocation\x18\x03 \x03(\x0b\x32\x10.LabeledLocation\"\xa2\x01\n\x07Purpose\x12/\n\x05ptype\x18\x01 \x01(\x0e\x32\x14.Purpose.PurposeType:\nUNPURPOSED\x12\x12\n\x07\x63lassID\x18\x02 \x01(\x03:\x01\x30\"R\n\x0bPurposeType\x12\x0e\n\nUNPURPOSED\x10\x00\x12\x0c\n\x08POSITIVE\x10\x01\x12\x0c\n\x08NEGATIVE\x10\x02\x12\x0e\n\nMULTICLASS\x10\x03\x12\x07\n\x03\x41NY\x10\x04\"W\n\x14PurposedLabelableSeq\x12\x15\n\x03pur\x18\x01 \x01(\x0b\x32\x08.Purpose\x12(\n\x10labeledArtifacts\x18\x02 \x01(\x0b\x32\x0e.LabelableList\">\n\x14PurposedListSequence\x12&\n\x07purlist\x18\x01 \x03(\x0b\x32\x15.PurposedLabelableSeq\"6\n\x06RunSet\x12,\n\rpurposedLists\x18\x01 \x01(\x0b\x32\x15.PurposedListSequence')
+  serialized_pb='\n\x13protobuf_defs.proto\"s\n\x0fMatlabBridgeMsg\x12\x14\n\x03run\x18\x01 \x01(\x0b\x32\x07.RunSet\x12\x1a\n\x05props\x18\x02 \x03(\x0b\x32\x0b.Properties\x12\x17\n\x03res\x18\x03 \x01(\x0b\x32\n.ResultSet\x12\x15\n\x05model\x18\x04 \x01(\x0b\x32\x06.Model\"!\n\x05Model\x12\x18\n\x05mPath\x18\x01 \x01(\x0b\x32\t.FilePath\",\n\nProperties\x12\r\n\x03key\x18\x01 \x01(\t:\x00\x12\x0f\n\x05value\x18\x02 \x01(\t:\x00\"K\n\x06Result\x12\x1c\n\x08original\x18\x01 \x01(\x0b\x32\n.Labelable\x12#\n\x0b\x66oundLabels\x18\x02 \x01(\x0b\x32\x0e.LabelableList\"#\n\nResultList\x12\x15\n\x04rslt\x18\x01 \x03(\x0b\x32\x07.Result\")\n\tResultSet\x12\x1c\n\x07results\x18\x01 \x01(\x0b\x32\x0b.ResultList\"\'\n\rDirectoryPath\x12\x16\n\x0crelativePath\x18\x01 \x01(\t:\x00\"A\n\x08\x46ilePath\x12!\n\tdirectory\x18\x01 \x01(\x0b\x32\x0e.DirectoryPath\x12\x12\n\x08\x66ilename\x18\x02 \x01(\t:\x00\"N\n\x0eImageSubstrate\x12\x10\n\x05width\x18\x01 \x01(\x03:\x01\x30\x12\x11\n\x06height\x18\x02 \x01(\x03:\x01\x30\x12\x17\n\x04path\x18\x03 \x01(\x0b\x32\t.FilePath\"w\n\x0eVideoSubstrate\x12\x10\n\x05width\x18\x01 \x01(\x03:\x01\x30\x12\x11\n\x06height\x18\x02 \x01(\x03:\x01\x30\x12\x1c\n\tvideopath\x18\x03 \x01(\x0b\x32\t.FilePath\x12\"\n\nframepaths\x18\x04 \x03(\x0b\x32\x0e.FramePathPair\"?\n\rFramePathPair\x12\x10\n\x08\x66rameNum\x18\x01 \x01(\x03\x12\x1c\n\tframepath\x18\x02 \x01(\x0b\x32\t.FilePath\"\x1a\n\tSemantics\x12\r\n\x03url\x18\x01 \x01(\t:\x00\"1\n\x0fLabelProperties\x12\r\n\x03key\x18\x01 \x01(\t:\x00\x12\x0f\n\x05value\x18\x02 \x01(\t:\x00\"t\n\x05Label\x12\x17\n\x08hasLabel\x18\x01 \x01(\x08:\x05\x66\x61lse\x12\x0e\n\x04name\x18\x02 \x01(\t:\x00\x12$\n\nproperties\x18\x03 \x01(\x0b\x32\x10.LabelProperties\x12\x1c\n\x08semantix\x18\x04 \x01(\x0b\x32\n.Semantics\"y\n\tLabelable\x12\x15\n\nconfidence\x18\x01 \x01(\x02:\x01\x30\x12\x13\n\x03lab\x18\x02 \x01(\x0b\x32\x06.Label\x12\x1f\n\x06imgSub\x18\x03 \x01(\x0b\x32\x0f.ImageSubstrate\x12\x1f\n\x06vidSub\x18\x04 \x01(\x0b\x32\x0f.VideoSubstrate\"\x9e\x02\n\x0cLabeledTrack\x12\x15\n\nconfidence\x18\x01 \x01(\x02:\x01\x30\x12\x13\n\x03lab\x18\x02 \x01(\x0b\x32\x06.Label\x12\x1f\n\x06imgSub\x18\x03 \x01(\x0b\x32\x0f.ImageSubstrate\x12\x1f\n\x06vidSub\x18\x04 \x01(\x0b\x32\x0f.VideoSubstrate\x12.\n\x12keyframesLocations\x18\x05 \x01(\x0b\x32\x12.FrameLocationList\x12\x35\n\x06interp\x18\x06 \x01(\x0e\x32\x1b.LabeledTrack.Interpolation:\x08\x44ISCRETE\"9\n\rInterpolation\x12\x0c\n\x08\x44ISCRETE\x10\x00\x12\n\n\x06LINEAR\x10\x01\x12\x0e\n\nPOLYNOMIAL\x10\x02\"\xe9\x01\n\x0fLabeledLocation\x12\x15\n\nconfidence\x18\x01 \x01(\x02:\x01\x30\x12\x13\n\x03lab\x18\x02 \x01(\x0b\x32\x06.Label\x12\x1f\n\x06imgSub\x18\x03 \x01(\x0b\x32\x0f.ImageSubstrate\x12\x1f\n\x06vidSub\x18\x04 \x01(\x0b\x32\x0f.VideoSubstrate\x12\x12\n\x03loc\x18\x05 \x01(\x0b\x32\x05.BBox\x12\x19\n\x04sloc\x18\x06 \x01(\x0b\x32\x0b.Silhouette\"9\n\rInterpolation\x12\x0c\n\x08\x44ISCRETE\x10\x00\x12\n\n\x06LINEAR\x10\x01\x12\x0e\n\nPOLYNOMIAL\x10\x02\":\n\x11\x46rameLocationList\x12%\n\rframelocation\x18\x01 \x03(\x0b\x32\x0e.FrameLocation\"\x9f\x01\n\rFrameLocation\x12\x1d\n\x05\x66rame\x18\x01 \x01(\x0b\x32\x0e.VideoSeekTime\x12\x15\n\x03loc\x18\x02 \x01(\x0b\x32\x08.Point2D\x12$\n\nlocPrecise\x18\x03 \x01(\x0b\x32\x10.PreciseLocation\x12\x17\n\x08occluded\x18\x04 \x01(\x08:\x05\x66\x61lse\x12\x19\n\noutOfFrame\x18\x05 \x01(\x08:\x05\x66\x61lse\"/\n\rVideoSeekTime\x12\x0c\n\x04time\x18\x01 \x01(\x03\x12\x10\n\x08\x66ramecnt\x18\x02 \x01(\x03\"\x1f\n\x07Point2D\x12\t\n\x01x\x18\x01 \x01(\x03\x12\t\n\x01y\x18\x02 \x01(\x03\";\n\x04\x42\x42ox\x12\t\n\x01x\x18\x01 \x01(\x03\x12\t\n\x01y\x18\x02 \x01(\x03\x12\r\n\x05width\x18\x03 \x01(\x03\x12\x0e\n\x06height\x18\x04 \x01(\x03\"&\n\nSilhouette\x12\x18\n\x06points\x18\x01 \x03(\x0b\x32\x08.Point2D\"\'\n\x0fPreciseLocation\x12\t\n\x01x\x18\x01 \x01(\x02\x12\t\n\x01y\x18\x02 \x01(\x02\"~\n\rLabelableList\x12\x1d\n\tlabelable\x18\x01 \x03(\x0b\x32\n.Labelable\x12#\n\x0clabeledTrack\x18\x02 \x03(\x0b\x32\r.LabeledTrack\x12)\n\x0flabeledLocation\x18\x03 \x03(\x0b\x32\x10.LabeledLocation\"\xa2\x01\n\x07Purpose\x12/\n\x05ptype\x18\x01 \x01(\x0e\x32\x14.Purpose.PurposeType:\nUNPURPOSED\x12\x12\n\x07\x63lassID\x18\x02 \x01(\x03:\x01\x30\"R\n\x0bPurposeType\x12\x0e\n\nUNPURPOSED\x10\x00\x12\x0c\n\x08POSITIVE\x10\x01\x12\x0c\n\x08NEGATIVE\x10\x02\x12\x0e\n\nMULTICLASS\x10\x03\x12\x07\n\x03\x41NY\x10\x04\"W\n\x14PurposedLabelableSeq\x12\x15\n\x03pur\x18\x01 \x01(\x0b\x32\x08.Purpose\x12(\n\x10labeledArtifacts\x18\x02 \x01(\x0b\x32\x0e.LabelableList\">\n\x14PurposedListSequence\x12&\n\x07purlist\x18\x01 \x03(\x0b\x32\x15.PurposedLabelableSeq\"6\n\x06RunSet\x12,\n\rpurposedLists\x18\x01 \x01(\x0b\x32\x15.PurposedListSequence')
 
 
 
@@ -94,8 +94,8 @@ _PURPOSE_PURPOSETYPE = descriptor.EnumDescriptor(
   ],
   containing_type=None,
   options=None,
-  serialized_start=2185,
-  serialized_end=2267,
+  serialized_start=2252,
+  serialized_end=2334,
 )
 
 
@@ -758,6 +758,13 @@ _LABELEDLOCATION = descriptor.Descriptor(
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
+    descriptor.FieldDescriptor(
+      name='sloc', full_name='LabeledLocation.sloc', index=5,
+      number=6, type=11, cpp_type=10, label=1,
+      has_default_value=False, default_value=None,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
   ],
   extensions=[
   ],
@@ -769,7 +776,7 @@ _LABELEDLOCATION = descriptor.Descriptor(
   is_extendable=False,
   extension_ranges=[],
   serialized_start=1362,
-  serialized_end=1568,
+  serialized_end=1595,
 )
 
 
@@ -796,8 +803,8 @@ _FRAMELOCATIONLIST = descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=1570,
-  serialized_end=1628,
+  serialized_start=1597,
+  serialized_end=1655,
 )
 
 
@@ -852,8 +859,8 @@ _FRAMELOCATION = descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=1631,
-  serialized_end=1790,
+  serialized_start=1658,
+  serialized_end=1817,
 )
 
 
@@ -887,8 +894,8 @@ _VIDEOSEEKTIME = descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=1792,
-  serialized_end=1839,
+  serialized_start=1819,
+  serialized_end=1866,
 )
 
 
@@ -922,8 +929,8 @@ _POINT2D = descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=1841,
-  serialized_end=1872,
+  serialized_start=1868,
+  serialized_end=1899,
 )
 
 
@@ -971,8 +978,36 @@ _BBOX = descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=1874,
-  serialized_end=1933,
+  serialized_start=1901,
+  serialized_end=1960,
+)
+
+
+_SILHOUETTE = descriptor.Descriptor(
+  name='Silhouette',
+  full_name='Silhouette',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  fields=[
+    descriptor.FieldDescriptor(
+      name='points', full_name='Silhouette.points', index=0,
+      number=1, type=11, cpp_type=10, label=3,
+      has_default_value=False, default_value=[],
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  options=None,
+  is_extendable=False,
+  extension_ranges=[],
+  serialized_start=1962,
+  serialized_end=2000,
 )
 
 
@@ -1006,8 +1041,8 @@ _PRECISELOCATION = descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=1935,
-  serialized_end=1974,
+  serialized_start=2002,
+  serialized_end=2041,
 )
 
 
@@ -1048,8 +1083,8 @@ _LABELABLELIST = descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=1976,
-  serialized_end=2102,
+  serialized_start=2043,
+  serialized_end=2169,
 )
 
 
@@ -1084,8 +1119,8 @@ _PURPOSE = descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=2105,
-  serialized_end=2267,
+  serialized_start=2172,
+  serialized_end=2334,
 )
 
 
@@ -1119,8 +1154,8 @@ _PURPOSEDLABELABLESEQ = descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=2269,
-  serialized_end=2356,
+  serialized_start=2336,
+  serialized_end=2423,
 )
 
 
@@ -1147,8 +1182,8 @@ _PURPOSEDLISTSEQUENCE = descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=2358,
-  serialized_end=2420,
+  serialized_start=2425,
+  serialized_end=2487,
 )
 
 
@@ -1175,8 +1210,8 @@ _RUNSET = descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=2422,
-  serialized_end=2476,
+  serialized_start=2489,
+  serialized_end=2543,
 )
 
 _MATLABBRIDGEMSG.fields_by_name['run'].message_type = _RUNSET
@@ -1208,11 +1243,13 @@ _LABELEDLOCATION.fields_by_name['lab'].message_type = _LABEL
 _LABELEDLOCATION.fields_by_name['imgSub'].message_type = _IMAGESUBSTRATE
 _LABELEDLOCATION.fields_by_name['vidSub'].message_type = _VIDEOSUBSTRATE
 _LABELEDLOCATION.fields_by_name['loc'].message_type = _BBOX
+_LABELEDLOCATION.fields_by_name['sloc'].message_type = _SILHOUETTE
 _LABELEDLOCATION_INTERPOLATION.containing_type = _LABELEDLOCATION;
 _FRAMELOCATIONLIST.fields_by_name['framelocation'].message_type = _FRAMELOCATION
 _FRAMELOCATION.fields_by_name['frame'].message_type = _VIDEOSEEKTIME
 _FRAMELOCATION.fields_by_name['loc'].message_type = _POINT2D
 _FRAMELOCATION.fields_by_name['locPrecise'].message_type = _PRECISELOCATION
+_SILHOUETTE.fields_by_name['points'].message_type = _POINT2D
 _LABELABLELIST.fields_by_name['labelable'].message_type = _LABELABLE
 _LABELABLELIST.fields_by_name['labeledTrack'].message_type = _LABELEDTRACK
 _LABELABLELIST.fields_by_name['labeledLocation'].message_type = _LABELEDLOCATION
@@ -1244,6 +1281,7 @@ DESCRIPTOR.message_types_by_name['FrameLocation'] = _FRAMELOCATION
 DESCRIPTOR.message_types_by_name['VideoSeekTime'] = _VIDEOSEEKTIME
 DESCRIPTOR.message_types_by_name['Point2D'] = _POINT2D
 DESCRIPTOR.message_types_by_name['BBox'] = _BBOX
+DESCRIPTOR.message_types_by_name['Silhouette'] = _SILHOUETTE
 DESCRIPTOR.message_types_by_name['PreciseLocation'] = _PRECISELOCATION
 DESCRIPTOR.message_types_by_name['LabelableList'] = _LABELABLELIST
 DESCRIPTOR.message_types_by_name['Purpose'] = _PURPOSE
@@ -1382,6 +1420,12 @@ class BBox(message.Message):
   DESCRIPTOR = _BBOX
   
   # @@protoc_insertion_point(class_scope:BBox)
+
+class Silhouette(message.Message):
+  __metaclass__ = reflection.GeneratedProtocolMessageType
+  DESCRIPTOR = _SILHOUETTE
+  
+  # @@protoc_insertion_point(class_scope:Silhouette)
 
 class PreciseLocation(message.Message):
   __metaclass__ = reflection.GeneratedProtocolMessageType

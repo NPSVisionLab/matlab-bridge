@@ -15,7 +15,7 @@ function [label] = pb_read_Label(buffer, buffer_start, buffer_end)
 %     properties     : optional <a href="matlab:help pb_read_LabelProperties">LabelProperties</a>, defaults to struct([]).
 %     semantix       : optional <a href="matlab:help pb_read_Semantics">Semantics</a>, defaults to struct([]).
 %
-%   See also pb_read_LabelProperties, pb_read_Semantics, pb_read_MatlabBridgeMsg, pb_read_Model, pb_read_Properties, pb_read_Result, pb_read_ResultList, pb_read_ResultSet, pb_read_DirectoryPath, pb_read_FilePath, pb_read_ImageSubstrate, pb_read_VideoSubstrate, pb_read_FramePathPair, pb_read_Labelable, pb_read_LabeledTrack, pb_read_FrameLocationList, pb_read_FrameLocation, pb_read_VideoSeekTime, pb_read_Point2D, pb_read_PreciseLocation, pb_read_LabelableList, pb_read_Purpose, pb_read_PurposedLabelableSeq, pb_read_PurposedListSequence, pb_read_RunSet.
+%   See also pb_read_LabelProperties, pb_read_Semantics, pb_read_MatlabBridgeMsg, pb_read_Model, pb_read_Properties, pb_read_Result, pb_read_ResultList, pb_read_ResultSet, pb_read_DirectoryPath, pb_read_FilePath, pb_read_ImageSubstrate, pb_read_VideoSubstrate, pb_read_FramePathPair, pb_read_Labelable, pb_read_LabeledTrack, pb_read_LabeledLocation, pb_read_FrameLocationList, pb_read_FrameLocation, pb_read_VideoSeekTime, pb_read_Point2D, pb_read_BBox, pb_read_Silhouette, pb_read_PreciseLocation, pb_read_LabelableList, pb_read_Purpose, pb_read_PurposedLabelableSeq, pb_read_PurposedListSequence, pb_read_RunSet.
   
   if (nargin < 1)
     buffer = uint8([]);
